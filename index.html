@@ -365,7 +365,7 @@
       </div>
  
       <div class="copy-all-row" id="copyAllRow">
-        <div class="copy-all-label">Linha pronta para colar no Google Planilhas (valores separados por Tab)</div>
+        <div class="copy-all-label">Linha pronta para colar no Google Planilhas (valores separados por ponto e vírgula)</div>
         <div class="copy-all-value" id="tsvPreview"></div>
         <button class="btn btn-green" onclick="copyTSV()">Copiar linha para planilha</button>
       </div>
@@ -650,7 +650,7 @@ function renderFinal() {
   document.getElementById('sheetPos').textContent    = posText;
   document.getElementById('sheetNeg').textContent    = negText;
  
-  const tsv = [nb.toFixed(1), ns.toFixed(1), ng.toFixed(1), total.toFixed(1), posText, negText].join('\t');
+  const tsv = [nb.toFixed(1), ns.toFixed(1), ng.toFixed(1), total.toFixed(1), posText, negText].join(';');
   document.getElementById('tsvPreview').textContent = tsv;
  
   // Relatório técnico
