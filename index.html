@@ -7,132 +7,117 @@
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body { font-family: system-ui, sans-serif; background: #f5f5f3; color: #1a1a1a; min-height: 100vh; }
+ 
   .header { background: #fff; border-bottom: 1px solid #e5e5e3; padding: 1rem 2rem; display: flex; align-items: center; gap: 12px; }
   .header-icon { width: 36px; height: 36px; background: #1a1a1a; border-radius: 8px; display: flex; align-items: center; justify-content: center; }
-  .header-icon svg { width: 20px; height: 20px; fill: #fff; }
+  .header-icon svg { width: 20px; height: 20px; fill: none; stroke: #fff; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
   .header h1 { font-size: 16px; font-weight: 600; }
   .header p { font-size: 13px; color: #666; }
-  .container { max-width: 860px; margin: 0 auto; padding: 2rem 1rem; }
+  .container { max-width: 780px; margin: 0 auto; padding: 2rem 1rem; }
  
   .card { background: #fff; border: 1px solid #e5e5e3; border-radius: 12px; padding: 1.5rem; margin-bottom: 1.5rem; }
-  .card-title { font-size: 14px; font-weight: 600; margin-bottom: 1rem; display: flex; align-items: center; gap: 8px; }
-  .badge { font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 20px; }
-  .badge-blue { background: #e8f0fe; color: #1a56db; }
-  .badge-green { background: #dcfce7; color: #166534; }
-  .badge-amber { background: #fef3c7; color: #92400e; }
+  .card-title { font-size: 14px; font-weight: 600; margin-bottom: 1rem; }
  
   label { font-size: 13px; font-weight: 500; display: block; margin-bottom: 6px; color: #444; }
-  input[type="password"], input[type="text"] {
-    width: 100%; padding: 8px 12px; border: 1px solid #ddd; border-radius: 8px;
-    font-size: 14px; outline: none; transition: border 0.15s;
-  }
+  input[type="text"] { width: 100%; padding: 8px 12px; border: 1px solid #ddd; border-radius: 8px; font-size: 14px; outline: none; transition: border 0.15s; }
   input:focus { border-color: #888; }
-  .input-hint { font-size: 12px; color: #888; margin-top: 4px; }
  
-  .upload-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
-  .upload-box {
-    border: 1.5px dashed #ddd; border-radius: 10px; padding: 1.25rem;
-    text-align: center; cursor: pointer; transition: border-color 0.15s, background 0.15s;
-    position: relative;
-  }
-  .upload-box:hover { border-color: #888; background: #fafafa; }
-  .upload-box.has-file { border-color: #16a34a; border-style: solid; background: #f0fdf4; }
-  .upload-box input[type="file"] { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%; }
-  .upload-label { font-size: 13px; font-weight: 600; margin-bottom: 4px; }
-  .upload-sub { font-size: 12px; color: #888; }
-  .upload-filename { font-size: 12px; color: #16a34a; font-weight: 500; margin-top: 6px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-  .upload-icon { font-size: 22px; margin-bottom: 6px; }
- 
-  .field-row { margin-bottom: 1rem; }
- 
-  .btn {
-    display: inline-flex; align-items: center; gap: 8px;
-    padding: 10px 20px; border-radius: 8px; font-size: 14px; font-weight: 600;
-    cursor: pointer; border: none; transition: background 0.15s, opacity 0.15s;
-  }
+  .btn { display: inline-flex; align-items: center; gap: 8px; padding: 10px 20px; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; border: none; transition: background 0.15s, opacity 0.15s; }
   .btn-primary { background: #1a1a1a; color: #fff; }
-  .btn-primary:hover { background: #333; }
-  .btn-primary:disabled { opacity: 0.4; cursor: not-allowed; }
-  .btn-secondary { background: #f0f0ee; color: #333; }
+  .btn-primary:hover:not(:disabled) { background: #333; }
+  .btn-primary:disabled { opacity: 0.35; cursor: not-allowed; }
+  .btn-secondary { background: #f0f0ee; color: #333; border: 1px solid #e0e0de; }
   .btn-secondary:hover { background: #e5e5e3; }
+  .btn-ghost { background: transparent; color: #555; font-size: 13px; padding: 8px 14px; border: 1px solid #ddd; border-radius: 8px; cursor: pointer; font-weight: 500; }
+  .btn-ghost:hover { background: #f5f5f3; }
  
-  .progress-area { display: none; }
-  .progress-area.visible { display: block; }
-  .progress-bar-wrap { background: #f0f0ee; border-radius: 99px; height: 6px; margin: 8px 0 4px; }
-  .progress-bar { background: #1a1a1a; border-radius: 99px; height: 6px; width: 0%; transition: width 0.4s; }
-  .progress-status { font-size: 13px; color: #555; }
+  /* Stepper */
+  .stepper { display: flex; align-items: flex-start; margin-bottom: 2rem; }
+  .step { display: flex; flex-direction: column; align-items: center; flex: 1; position: relative; }
+  .step:not(:last-child)::after { content: ''; position: absolute; top: 15px; left: 55%; width: 90%; height: 2px; background: #e5e5e3; z-index: 0; transition: background 0.4s; }
+  .step:not(:last-child).done::after { background: #16a34a; }
+  .step-circle { width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; z-index: 1; border: 2px solid #ddd; background: #fff; color: #bbb; transition: all 0.3s; }
+  .step.active .step-circle { border-color: #1a1a1a; color: #1a1a1a; background: #fff; }
+  .step.done .step-circle { border-color: #16a34a; background: #16a34a; color: #fff; }
+  .step-label { font-size: 11px; color: #bbb; margin-top: 6px; font-weight: 500; text-align: center; }
+  .step.active .step-label { color: #1a1a1a; }
+  .step.done .step-label { color: #16a34a; }
  
-  .report-area { display: none; }
-  .report-area.visible { display: block; }
+  /* Upload zone */
+  .upload-zone { border: 2px dashed #ddd; border-radius: 12px; padding: 2.5rem 1.5rem; text-align: center; cursor: pointer; transition: all 0.2s; position: relative; }
+  .upload-zone:hover { border-color: #888; background: #fafafa; }
+  .upload-zone.has-file { border-color: #16a34a; border-style: solid; background: #f0fdf4; }
+  .upload-zone input[type="file"] { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%; }
+  .upload-zone-icon { font-size: 38px; margin-bottom: 10px; }
+  .upload-zone-title { font-size: 15px; font-weight: 600; margin-bottom: 4px; }
+  .upload-zone-sub { font-size: 13px; color: #888; }
+  .upload-zone-file { font-size: 13px; color: #16a34a; font-weight: 600; margin-top: 8px; }
  
-  .student-name { font-size: 18px; font-weight: 700; margin-bottom: 4px; }
-  .score-row { display: flex; align-items: center; gap: 16px; margin-bottom: 1.5rem; flex-wrap: wrap; }
-  .score-big { font-size: 42px; font-weight: 800; line-height: 1; }
-  .score-label { font-size: 13px; color: #666; }
-  .score-bar-wrap { flex: 1; min-width: 200px; background: #f0f0ee; border-radius: 99px; height: 8px; }
-  .score-bar { border-radius: 99px; height: 8px; transition: width 0.6s; }
+  .action-row { display: flex; gap: 10px; align-items: center; margin-top: 1rem; flex-wrap: wrap; }
  
-  .layer-section { margin-bottom: 1.25rem; }
-  .layer-header { display: flex; align-items: center; justify-content: space-between; padding: 10px 14px; border-radius: 8px; cursor: pointer; user-select: none; }
-  .layer-header:hover { filter: brightness(0.97); }
-  .layer-bronze { background: #fff7ed; border: 1px solid #fed7aa; }
-  .layer-silver { background: #f8fafc; border: 1px solid #cbd5e1; }
-  .layer-gold { background: #fefce8; border: 1px solid #fde047; }
-  .layer-title { font-size: 14px; font-weight: 600; }
-  .layer-score { font-size: 13px; font-weight: 700; }
-  .layer-checks { padding: 0 14px 12px; display: none; }
-  .layer-checks.open { display: block; }
- 
-  .check-item { display: flex; align-items: flex-start; gap: 10px; padding: 8px 0; border-bottom: 1px solid #f0f0ee; font-size: 13px; }
-  .check-item:last-child { border-bottom: none; }
-  .check-icon { width: 18px; height: 18px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; font-size: 11px; font-weight: 700; }
-  .check-pass { background: #dcfce7; color: #166534; }
-  .check-fail { background: #fee2e2; color: #991b1b; }
-  .check-partial { background: #fef3c7; color: #92400e; }
-  .check-text { flex: 1; }
-  .check-detail { font-size: 12px; color: #888; margin-top: 2px; }
- 
-  .full-report { background: #1a1a1a; color: #e5e5e3; border-radius: 10px; padding: 1.25rem; font-size: 13px; line-height: 1.7; white-space: pre-wrap; max-height: 600px; overflow-y: auto; }
-  .copy-btn { margin-top: 8px; }
- 
-  .error-box { background: #fff1f2; border: 1px solid #fecdd3; border-radius: 8px; padding: 1rem; font-size: 13px; color: #9f1239; }
-  .thinking { display: flex; align-items: center; gap: 10px; font-size: 13px; color: #666; padding: 1rem 0; }
-  .dot { width: 6px; height: 6px; border-radius: 50%; background: #888; animation: pulse 1.2s infinite; }
+  /* Thinking */
+  .thinking-bar { display: flex; align-items: center; gap: 10px; padding: 1rem 1.25rem; background: #f8f9fa; border-radius: 8px; }
+  .dot { width: 6px; height: 6px; border-radius: 50%; background: #888; animation: blink 1.2s infinite; flex-shrink: 0; }
   .dot:nth-child(2) { animation-delay: 0.2s; }
   .dot:nth-child(3) { animation-delay: 0.4s; }
-  @keyframes pulse { 0%,80%,100%{opacity:0.3} 40%{opacity:1} }
+  @keyframes blink { 0%,80%,100%{opacity:0.2} 40%{opacity:1} }
+  .thinking-text { font-size: 13px; color: #555; }
  
-  .tabs { display: flex; gap: 4px; margin-bottom: 1rem; border-bottom: 1px solid #e5e5e3; }
-  .tab { padding: 8px 16px; font-size: 13px; font-weight: 500; cursor: pointer; border-bottom: 2px solid transparent; color: #666; transition: color 0.15s, border-color 0.15s; }
-  .tab.active { color: #1a1a1a; border-bottom-color: #1a1a1a; }
-  .tab-content { display: none; }
-  .tab-content.active { display: block; }
+  /* Layer result */
+  .layer-result { border-radius: 10px; overflow: hidden; margin-bottom: 1.25rem; border: 1px solid; }
+  .layer-result.bronze { border-color: #fed7aa; }
+  .layer-result.silver { border-color: #cbd5e1; }
+  .layer-result.gold   { border-color: #fde047; }
+  .layer-result-header { padding: 12px 16px; display: flex; align-items: center; justify-content: space-between; cursor: pointer; user-select: none; }
+  .layer-result.bronze .layer-result-header { background: #fff7ed; }
+  .layer-result.silver .layer-result-header { background: #f8fafc; }
+  .layer-result.gold   .layer-result-header { background: #fefce8; }
+  .layer-result-title { font-size: 14px; font-weight: 600; }
+  .score-pill { font-size: 12px; font-weight: 700; padding: 3px 10px; border-radius: 20px; }
+  .bronze-pill { background: #fed7aa; color: #9a3412; }
+  .silver-pill { background: #e2e8f0; color: #334155; }
+  .gold-pill   { background: #fef08a; color: #854d0e; }
+  .layer-result-body { padding: 0 16px; overflow: hidden; max-height: 0; transition: max-height 0.35s ease; }
+  .layer-result-body.open { max-height: 2000px; padding: 4px 16px 16px; }
  
-  .summary-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 1.5rem; }
-  .summary-card { border-radius: 8px; padding: 1rem; text-align: center; }
-  .summary-card .num { font-size: 28px; font-weight: 800; }
-  .summary-card .lbl { font-size: 12px; font-weight: 500; margin-top: 2px; }
-  .bronze-card { background: #fff7ed; }
-  .bronze-card .num { color: #c2410c; }
-  .bronze-card .lbl { color: #9a3412; }
-  .silver-card { background: #f8fafc; }
-  .silver-card .num { color: #475569; }
-  .silver-card .lbl { color: #64748b; }
-  .gold-card { background: #fefce8; }
-  .gold-card .num { color: #ca8a04; }
-  .gold-card .lbl { color: #a16207; }
+  .check-item { display: flex; align-items: flex-start; gap: 10px; padding: 8px 0; border-bottom: 1px solid #f0f0ee; }
+  .check-item:last-child { border-bottom: none; }
+  .check-icon { width: 18px; height: 18px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; font-size: 10px; font-weight: 700; }
+  .check-pass    { background: #dcfce7; color: #166534; }
+  .check-fail    { background: #fee2e2; color: #991b1b; }
+  .check-partial { background: #fef3c7; color: #92400e; }
+  .check-label { font-size: 13px; font-weight: 500; }
+  .check-detail { font-size: 12px; color: #777; margin-top: 2px; line-height: 1.5; }
+  .narrative { font-size: 13px; color: #555; line-height: 1.7; padding: 10px 0 2px; border-top: 1px solid #f0f0ee; margin-top: 6px; }
  
-  @media (max-width: 600px) {
-    .upload-grid { grid-template-columns: 1fr; }
-    .summary-grid { grid-template-columns: 1fr; }
-  }
+  /* Final score */
+  .final-score-row { display: flex; align-items: center; gap: 20px; margin-bottom: 1.5rem; flex-wrap: wrap; }
+  .score-big { font-size: 52px; font-weight: 800; line-height: 1; }
+  .score-label { font-size: 13px; color: #666; margin-top: 4px; }
+  .score-bar-wrap { flex: 1; min-width: 180px; background: #f0f0ee; border-radius: 99px; height: 10px; }
+  .score-bar { border-radius: 99px; height: 10px; transition: width 0.8s ease; }
+  .mini-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 10px; margin-bottom: 1.5rem; }
+  .mini-card { border-radius: 8px; padding: 12px; text-align: center; }
+  .mini-card .n { font-size: 26px; font-weight: 800; }
+  .mini-card .l { font-size: 11px; font-weight: 600; margin-top: 2px; }
+  .mc-bronze { background:#fff7ed; } .mc-bronze .n{color:#c2410c;} .mc-bronze .l{color:#9a3412;}
+  .mc-silver { background:#f8fafc; } .mc-silver .n{color:#475569;} .mc-silver .l{color:#64748b;}
+  .mc-gold   { background:#fefce8; } .mc-gold .n  {color:#ca8a04;} .mc-gold .l  {color:#a16207;}
+  .student-name { font-size: 20px; font-weight: 700; margin-bottom: 1rem; }
+ 
+  .report-box { background: #1a1a1a; color: #e5e5e3; border-radius: 10px; padding: 1.25rem; font-size: 12.5px; line-height: 1.75; white-space: pre-wrap; max-height: 480px; overflow-y: auto; margin-top: 1rem; display: none; }
+  .report-box.open { display: block; }
+ 
+  .error-box { background: #fff1f2; border: 1px solid #fecdd3; border-radius: 8px; padding: 1rem; font-size: 13px; color: #9f1239; margin-bottom: 1rem; }
+ 
+  @media(max-width:600px) { .mini-grid{grid-template-columns:1fr;} }
 </style>
 </head>
 <body>
  
 <div class="header">
   <div class="header-icon">
-    <svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+    <svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
   </div>
   <div>
     <h1>Corretor Automático — Arquitetura Medalhão</h1>
@@ -142,488 +127,355 @@
  
 <div class="container">
  
-  <!-- Config Card -->
-  <div class="card">
-    <div class="card-title">
-      <span>Configuração</span>
-      <span class="badge badge-blue">Passo 1</span>
-    </div>
-    <div class="field-row">
-      <label>Nome do aluno (opcional)</label>
-      <input type="text" id="studentName" placeholder="Ex: João Silva" />
-    </div>
-  </div>
- 
-  <!-- Upload Card -->
-  <div class="card">
-    <div class="card-title">
-      <span>Notebooks do aluno</span>
-      <span class="badge badge-blue">Passo 2</span>
-    </div>
-    <div class="upload-grid">
-      <div class="upload-box" id="box-bronze">
-        <input type="file" accept=".ipynb" onchange="handleFile(this,'bronze')" />
-        <div class="upload-icon">🥉</div>
-        <div class="upload-label">Bronze</div>
-        <div class="upload-sub">Ingestão de dados</div>
-        <div class="upload-filename" id="name-bronze">Nenhum arquivo</div>
+  <!-- Nome -->
+  <div class="card" id="nameCard">
+    <div class="card-title">Identificação do aluno</div>
+    <div style="display:flex;gap:10px;align-items:flex-end;">
+      <div style="flex:1;">
+        <label>Nome do aluno</label>
+        <input type="text" id="studentName" placeholder="Ex: João Silva" onkeydown="if(event.key==='Enter')startFlow()" />
       </div>
-      <div class="upload-box" id="box-silver">
-        <input type="file" accept=".ipynb" onchange="handleFile(this,'silver')" />
-        <div class="upload-icon">🥈</div>
-        <div class="upload-label">Silver</div>
-        <div class="upload-sub">Transformações</div>
-        <div class="upload-filename" id="name-silver">Nenhum arquivo</div>
-      </div>
-      <div class="upload-box" id="box-gold">
-        <input type="file" accept=".ipynb" onchange="handleFile(this,'gold')" />
-        <div class="upload-icon">🥇</div>
-        <div class="upload-label">Gold</div>
-        <div class="upload-sub">Data Marts</div>
-        <div class="upload-filename" id="name-gold">Nenhum arquivo</div>
-      </div>
+      <button class="btn btn-primary" onclick="startFlow()">Iniciar correção</button>
     </div>
   </div>
  
-  <!-- Action -->
-  <div style="display:flex; gap:12px; margin-bottom:1.5rem;">
-    <button class="btn btn-primary" id="analyzeBtn" onclick="startAnalysis()" disabled>
-      Analisar notebooks
-    </button>
-    <button class="btn btn-secondary" onclick="resetAll()">Limpar</button>
+  <!-- Stepper -->
+  <div class="stepper" id="stepper" style="display:none;">
+    <div class="step" id="step-0"><div class="step-circle">1</div><div class="step-label">Bronze</div></div>
+    <div class="step" id="step-1"><div class="step-circle">2</div><div class="step-label">Silver</div></div>
+    <div class="step" id="step-2"><div class="step-circle">3</div><div class="step-label">Gold</div></div>
+    <div class="step" id="step-3"><div class="step-circle">4</div><div class="step-label">Resultado</div></div>
   </div>
  
-  <!-- Progress -->
-  <div class="progress-area" id="progressArea">
-    <div class="card">
-      <div class="thinking">
-        <div class="dot"></div><div class="dot"></div><div class="dot"></div>
-        <span id="progressStatus">Preparando análise...</span>
-      </div>
-      <div class="progress-bar-wrap">
-        <div class="progress-bar" id="progressBar"></div>
-      </div>
+  <!-- Upload dinâmico -->
+  <div class="card" id="uploadCard" style="display:none;">
+    <div class="card-title" id="uploadTitle"></div>
+    <div class="upload-zone" id="uploadZone">
+      <input type="file" accept=".ipynb" id="fileInput" onchange="onFileSelected(this)" />
+      <div class="upload-zone-icon" id="uzIcon">📂</div>
+      <div class="upload-zone-title" id="uzTitle">Clique ou arraste o arquivo aqui</div>
+      <div class="upload-zone-sub" id="uzSub">.ipynb</div>
+      <div class="upload-zone-file" id="uzFile"></div>
+    </div>
+    <div class="action-row">
+      <button class="btn btn-primary" id="analyzeBtn" onclick="runAnalysis()" disabled>Analisar</button>
+      <button class="btn-ghost" onclick="resetAll()">Recomeçar</button>
     </div>
   </div>
  
-  <!-- Report -->
-  <div class="report-area" id="reportArea">
-    <div class="card">
-      <div id="studentNameDisplay" class="student-name"></div>
-      <div class="score-row">
-        <div>
-          <div class="score-big" id="scoreBig">—</div>
-          <div class="score-label">nota sugerida / 10</div>
-        </div>
-        <div class="score-bar-wrap">
-          <div class="score-bar" id="scoreBar"></div>
-        </div>
-      </div>
- 
-      <div class="summary-grid">
-        <div class="summary-card bronze-card">
-          <div class="num" id="scoreBronze">—</div>
-          <div class="lbl">Bronze / 2 pts</div>
-        </div>
-        <div class="summary-card silver-card">
-          <div class="num" id="scoresilver">—</div>
-          <div class="lbl">Silver / 5 pts</div>
-        </div>
-        <div class="summary-card gold-card">
-          <div class="num" id="scoreGold">—</div>
-          <div class="lbl">Gold / 3 pts</div>
-        </div>
-      </div>
- 
-      <div class="tabs">
-        <div class="tab active" onclick="switchTab('checks')">Critérios</div>
-        <div class="tab" onclick="switchTab('full')">Relatório completo</div>
-      </div>
- 
-      <div class="tab-content active" id="tab-checks">
-        <div class="layer-section">
-          <div class="layer-header layer-bronze" onclick="toggleLayer('bronze-checks')">
-            <span class="layer-title">🥉 Camada Bronze</span>
-            <span class="layer-score" id="bronze-score-label"></span>
-          </div>
-          <div class="layer-checks" id="bronze-checks"></div>
-        </div>
-        <div class="layer-section">
-          <div class="layer-header layer-silver" onclick="toggleLayer('silver-checks')">
-            <span class="layer-title">🥈 Camada Silver</span>
-            <span class="layer-score" id="silver-score-label"></span>
-          </div>
-          <div class="layer-checks" id="silver-checks"></div>
-        </div>
-        <div class="layer-section">
-          <div class="layer-header layer-gold" onclick="toggleLayer('gold-checks')">
-            <span class="layer-title">🥇 Camada Gold</span>
-            <span class="layer-score" id="gold-score-label"></span>
-          </div>
-          <div class="layer-checks" id="gold-checks"></div>
-        </div>
-      </div>
- 
-      <div class="tab-content" id="tab-full">
-        <div class="full-report" id="fullReport"></div>
-        <button class="btn btn-secondary copy-btn" onclick="copyReport()">Copiar relatório</button>
-      </div>
+  <!-- Thinking -->
+  <div class="card" id="thinkingCard" style="display:none;">
+    <div class="thinking-bar">
+      <div class="dot"></div><div class="dot"></div><div class="dot"></div>
+      <span class="thinking-text" id="thinkingText">Analisando...</span>
     </div>
   </div>
  
+  <!-- Erro -->
   <div class="error-box" id="errorBox" style="display:none;"></div>
+ 
+  <!-- Resultados por camada -->
+  <div id="resultsArea"></div>
+ 
+  <!-- Score final -->
+  <div class="card" id="finalCard" style="display:none;">
+    <div class="student-name" id="finalName"></div>
+    <div class="final-score-row">
+      <div>
+        <div class="score-big" id="scoreTotal">—</div>
+        <div class="score-label">nota sugerida / 10</div>
+      </div>
+      <div class="score-bar-wrap">
+        <div class="score-bar" id="scoreBar"></div>
+      </div>
+    </div>
+    <div class="mini-grid">
+      <div class="mini-card mc-bronze"><div class="n" id="scBronze">—</div><div class="l">Bronze / 2 pts</div></div>
+      <div class="mini-card mc-silver"><div class="n" id="scSilver">—</div><div class="l">Silver / 5 pts</div></div>
+      <div class="mini-card mc-gold"  ><div class="n" id="scGold">—</div>  <div class="l">Gold / 3 pts</div></div>
+    </div>
+    <div class="action-row">
+      <button class="btn btn-secondary" onclick="toggleReport()">Ver relatório completo</button>
+      <button class="btn-ghost" onclick="copyReport()">Copiar relatório</button>
+      <button class="btn-ghost" onclick="resetAll()">Corrigir outro aluno</button>
+    </div>
+    <div class="report-box" id="reportBox"></div>
+  </div>
  
 </div>
  
 <script>
-const files = { bronze: null, silver: null, gold: null };
+const API_KEY = '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';
  
-const GABARITO = `
-Você é um avaliador especialista em Engenharia de Dados com profundo conhecimento de Apache Spark, PySpark, Delta Lake e Databricks. Sua tarefa é corrigir os notebooks de um aluno de graduação.
+const LAYERS = [
+  { key:'bronze', label:'🥉 Bronze', icon:'🥉', sub:'Ingestão de dados', max:2,  pill:'bronze-pill' },
+  { key:'silver', label:'🥈 Silver', icon:'🥈', sub:'Transformações',    max:5,  pill:'silver-pill' },
+  { key:'gold',   label:'🥇 Gold',   icon:'🥇', sub:'Data Marts',        max:3,  pill:'gold-pill'   }
+];
  
-A atividade consiste em implementar a Arquitetura Medalhão (Bronze → Silver → Gold) sobre o dataset Olist (e-commerce brasileiro).
+const LIMITS = [10000, 18000, 10000];
  
-## GABARITO OFICIAL DA ATIVIDADE
+const SYS = `Você é avaliador especialista em Engenharia de Dados com domínio de PySpark, Delta Lake e Databricks. Responda SOMENTE com JSON puro válido, sem markdown, sem texto fora do JSON.`;
  
-### CAMADA BRONZE (peso: 2 pontos)
-Critério B1 — Criação das 9 tabelas bronze com nomes corretos:
-  bronze.tb_customers, bronze.tb_geolocalizacao, bronze.tb_order_items,
-  bronze.tb_order_payments, bronze.tb_order_reviews, bronze.tb_orders,
-  bronze.tb_products, bronze.tb_sellers, bronze.tb_product_category_name_translation
+const PROMPTS = [
+`Avalie o notebook BRONZE de um projeto Arquitetura Medalhão (dataset Olist).
  
-Critério B2 — Coluna timestamp_ingestion em todas as tabelas bronze (deve registrar o momento exato da inserção)
+CRITÉRIOS:
+B1 — 9 tabelas criadas com nomes exatos: bronze.tb_customers, bronze.tb_geolocalizacao, bronze.tb_order_items, bronze.tb_order_payments, bronze.tb_order_reviews, bronze.tb_orders, bronze.tb_products, bronze.tb_sellers, bronze.tb_product_category_name_translation
+B2 — Coluna timestamp_ingestion em todas as tabelas, registrando o momento exato da inserção
+B3 — Ingestão da API PTAX do Banco Central criando bronze.tb_cotacao_dolar, datas no formato MM-DD-AAAA
  
-Critério B3 — Ingestão da API do Banco Central (endpoint PTAX) para cotação do dólar, criando bronze.tb_cotacao_dolar. Deve usar parâmetros de data no formato MM-DD-AAAA.
+Responda com este JSON exato:
+{"nota":<0.0 a 2.0>,"checks":[{"id":"B1","titulo":"9 tabelas bronze criadas","status":"PASSOU|PARCIAL|FALHOU","detalhe":"<observação>"},{"id":"B2","titulo":"Coluna timestamp_ingestion","status":"PASSOU|PARCIAL|FALHOU","detalhe":"<observação>"},{"id":"B3","titulo":"Ingestão API PTAX Banco Central","status":"PASSOU|PARCIAL|FALHOU","detalhe":"<observação>"}],"narrativa":"<3 a 5 frases sobre qualidade geral do notebook bronze>"}`,
  
-### CAMADA SILVER (peso: 5 pontos)
-Critério S1 — silver.dim_consumidores (origem: tb_customers):
-  - Deduplicação usando Window Function particionada por customer_id, ordenada decrescentemente por timestamp_ingestion (ROW_NUMBER ou similar)
-  - Colunas em português: id_consumidor, prefixo_cep, nome_consumidor, cidade, estado
-  - cidade e estado em UPPER CASE
+`Avalie o notebook SILVER de um projeto Arquitetura Medalhão (dataset Olist).
  
-Critério S2 — silver.fat_pedidos (origem: tb_orders):
-  - Status traduzido para português: delivered→entregue, canceled→cancelado, shipped→enviado, processing→processando, unavailable→indisponível, invoiced→faturado, created→criado, approved→aprovado
-  - Colunas derivadas criadas: tempo_entrega_dias, tempo_entrega_estimado_dias, diferenca_entrega_dias, entrega_no_prazo (Sim/Não/Não Entregue)
+CRITÉRIOS:
+S1 — dim_consumidores: Window Function ROW_NUMBER particionado por customer_id desc timestamp_ingestion, colunas PT (id_consumidor, prefixo_cep, nome_consumidor, cidade, estado), cidade/estado UPPER CASE
+S2 — fat_pedidos: status em PT (delivered→entregue, canceled→cancelado, shipped→enviado, processing→processando, unavailable→indisponível, invoiced→faturado, created→criado, approved→aprovado), colunas derivadas (tempo_entrega_dias, tempo_entrega_estimado_dias, diferenca_entrega_dias, entrega_no_prazo)
+S3 — fat_itens_pedidos: order_id→id_pedido, order_item_id→id_item, product_id→id_produto, seller_id→id_vendedor, price→preco_BRL, freight_value→preco_frete
+S4 — fat_pagamentos_pedidos: credit_card→Cartão de Crédito, boleto→Boleto, voucher→Voucher, debit_card→Cartão de Débito
+S5 — fat_avaliacoes_pedidos: remove pedidos inválidos e datas futuras, try_to_timestamp, nulos→"Sem comentário"/"Sem título"
+S6 — dim_produtos: Window Function igual S1, mapeamento completo com dimensões em PT
+S7 — dim_vendedores: Window Function igual S1, cidade/estado UPPER CASE, seller_id→id_vendedor
+S8 — dim_categoria_produtos_traducao: colunas nome_produto_pt e nome_produto_en
+S9 — dim_cotacao_dolar: calendário contínuo para fins de semana, last(ignorenulls=True) com Window Function
+S10 — fat_pedido_total: join fat_pedidos+pagamentos+cotacao, colunas (id_pedido, id_consumidor, status, valor_total_pago_brl, valor_total_pago_usd, data_pedido), 2 casas decimais
+S11 — OPTIMIZE + ZORDER nas tabelas fato por id_pedido e data_pedido
  
-Critério S3 — silver.fat_itens_pedidos (origem: tb_order_items):
-  - Mapeamento: order_id→id_pedido, order_item_id→id_item, product_id→id_produto, seller_id→id_vendedor, price→preco_BRL, freight_value→preco_frete
+Responda com este JSON exato:
+{"nota":<0.0 a 5.0>,"checks":[{"id":"S1","titulo":"dim_consumidores","status":"PASSOU|PARCIAL|FALHOU","detalhe":""},{"id":"S2","titulo":"fat_pedidos","status":"PASSOU|PARCIAL|FALHOU","detalhe":""},{"id":"S3","titulo":"fat_itens_pedidos","status":"PASSOU|PARCIAL|FALHOU","detalhe":""},{"id":"S4","titulo":"fat_pagamentos_pedidos","status":"PASSOU|PARCIAL|FALHOU","detalhe":""},{"id":"S5","titulo":"fat_avaliacoes_pedidos","status":"PASSOU|PARCIAL|FALHOU","detalhe":""},{"id":"S6","titulo":"dim_produtos","status":"PASSOU|PARCIAL|FALHOU","detalhe":""},{"id":"S7","titulo":"dim_vendedores","status":"PASSOU|PARCIAL|FALHOU","detalhe":""},{"id":"S8","titulo":"dim_categoria_traducao","status":"PASSOU|PARCIAL|FALHOU","detalhe":""},{"id":"S9","titulo":"dim_cotacao_dolar","status":"PASSOU|PARCIAL|FALHOU","detalhe":""},{"id":"S10","titulo":"fat_pedido_total","status":"PASSOU|PARCIAL|FALHOU","detalhe":""},{"id":"S11","titulo":"OPTIMIZE + ZORDER","status":"PASSOU|PARCIAL|FALHOU","detalhe":""}],"narrativa":"<3 a 5 frases sobre qualidade geral do notebook silver>"}`,
  
-Critério S4 — silver.fat_pagamentos_pedidos (origem: tb_order_payments):
-  - Tipos de pagamento traduzidos: credit_card→Cartão de Crédito, boleto→Boleto, voucher→Voucher, debit_card→Cartão de Débito
+`Avalie o notebook GOLD de um projeto Arquitetura Medalhão (dataset Olist).
  
-Critério S5 — silver.fat_avaliacoes_pedidos (origem: tb_order_reviews):
-  - Remoção de registros com pedido inválido ou datas no futuro
-  - Uso de try_to_timestamp para tolerância a falhas em datas
-  - Nulos preenchidos: "Sem comentário" e "Sem título"
+CRITÉRIOS:
+G1 — fat_vendas_comercial: granularidade ano+mês+categoria, métricas (ano_venda, mes_venda, categoria_produto, total_pedidos countDistinct, qtd_itens_vendidos, receita_total_brl, receita_total_usd, ticket_medio_brl), 2 casas decimais
+G2 — Rankings Top 5 via display(): mais vendidos (nome, categoria, qtd) e menos vendidos
+G3 — fat_avaliacoes_clientes: granularidade categoria+vendedor+estado, métricas (total_avaliacoes, avaliacao_media, total_avaliacoes_positivas>=4, total_avaliacoes_negativas<=2, percentual_satisfacao)
+G4 — Rankings qualidade via display(): produto mais/menos avaliado, vendedor mais/menos avaliado, desempate por volume desc
  
-Critério S6 — silver.dim_produtos (origem: tb_products):
-  - Deduplicação com Window Function igual a dim_consumidores
-  - Mapeamento correto incluindo dimensões (peso, comprimento, etc.) em português
+Responda com este JSON exato:
+{"nota":<0.0 a 3.0>,"checks":[{"id":"G1","titulo":"fat_vendas_comercial","status":"PASSOU|PARCIAL|FALHOU","detalhe":""},{"id":"G2","titulo":"Rankings Top 5 vendidos","status":"PASSOU|PARCIAL|FALHOU","detalhe":""},{"id":"G3","titulo":"fat_avaliacoes_clientes","status":"PASSOU|PARCIAL|FALHOU","detalhe":""},{"id":"G4","titulo":"Rankings qualidade","status":"PASSOU|PARCIAL|FALHOU","detalhe":""}],"narrativa":"<3 a 5 frases sobre qualidade geral do notebook gold>"}`
+];
  
-Critério S7 — silver.dim_vendedores (origem: tb_sellers):
-  - Deduplicação com Window Function
-  - cidade e estado em UPPER CASE
-  - Mapeamento: seller_id→id_vendedor, seller_name→nome_vendedor, etc.
+let idx = 0;
+let currentFile = null;
+let studentName = '';
+let results = [];
+let narrativas = [];
  
-Critério S8 — silver.dim_categoria_produtos_traducao:
-  - Colunas nome_produto_pt e nome_produto_en corretamente mapeadas
- 
-Critério S9 — silver.dim_cotacao_dolar:
-  - Calendário contínuo criado para cobrir fins de semana
-  - Uso de last(ignorenulls=True) com Window Function para propagar cotação da sexta-feira
- 
-Critério S10 — silver.fat_pedido_total:
-  - Join de fat_pedidos + pagamentos + dim_cotacao_dolar
-  - Colunas: id_pedido, id_consumidor, status, valor_total_pago_brl, valor_total_pago_usd, data_pedido
-  - Valores BRL e USD arredondados para exatamente 2 casas decimais (round/format)
- 
-Critério S11 — Otimização Delta (OPTIMIZE + ZORDER):
-  - Executado nas tabelas fato principais
-  - ZORDER aplicado nas colunas id_pedido e data_pedido
- 
-### CAMADA GOLD (peso: 3 pontos)
-Critério G1 — gold.fat_vendas_comercial:
-  - Granularidade: ano, mês, categoria de produto
-  - Métricas: ano_venda, mes_venda, categoria_produto, total_pedidos (countDistinct), qtd_itens_vendidos, receita_total_brl, receita_total_usd, ticket_medio_brl
-  - Valores financeiros com 2 casas decimais
- 
-Critério G2 — Rankings Top 5 (via display()):
-  - Top 5 produtos mais vendidos (nome, categoria, quantidade)
-  - Top 5 produtos menos vendidos
- 
-Critério G3 — gold.fat_avaliacoes_clientes:
-  - Granularidade: categoria produto + nome vendedor + estado vendedor
-  - Métricas: total_avaliacoes, avaliacao_media, total_avaliacoes_positivas (>=4), total_avaliacoes_negativas (<=2), percentual_satisfacao
- 
-Critério G4 — Rankings de qualidade (via display()):
-  - Produto mais bem avaliado
-  - Produto menos avaliado
-  - Vendedor mais bem avaliado
-  - Vendedor menos avaliado
-  - Critério de desempate: volume de avaliações decrescente
- 
-## INSTRUÇÕES DE AVALIAÇÃO
- 
-Analise os notebooks fornecidos e para CADA critério acima:
-1. Verifique se foi implementado (busque o código relevante)
-2. Avalie a qualidade/correção da implementação
-3. Classifique como: PASSOU / PARCIAL / FALHOU
-4. Justifique brevemente com referência ao código do aluno
- 
-Ao final, calcule:
-- Nota Bronze (0 a 2): baseado nos critérios B1, B2, B3
-- Nota Silver (0 a 5): baseado nos critérios S1 a S11
-- Nota Gold (0 a 3): baseado nos critérios G1 a G4
-- Nota Total = Bronze + Silver + Gold (0 a 10)
- 
-## FORMATO DE RESPOSTA OBRIGATÓRIO
- 
-Responda SOMENTE com um JSON válido neste formato exato (sem markdown, sem texto antes ou depois):
-{
-  "nota_bronze": <número 0-2>,
-  "nota_silver": <número 0-5>,
-  "nota_gold": <número 0-3>,
-  "nota_total": <número 0-10>,
-  "resumo_geral": "<2-3 frases sobre o trabalho do aluno>",
-  "bronze": [
-    {"id": "B1", "titulo": "Criação das 9 tabelas bronze", "status": "PASSOU|PARCIAL|FALHOU", "detalhe": "<observação>"},
-    {"id": "B2", "titulo": "Coluna timestamp_ingestion", "status": "PASSOU|PARCIAL|FALHOU", "detalhe": "<observação>"},
-    {"id": "B3", "titulo": "Ingestão API Banco Central", "status": "PASSOU|PARCIAL|FALHOU", "detalhe": "<observação>"}
-  ],
-  "silver": [
-    {"id": "S1", "titulo": "dim_consumidores (dedup + PT + upper)", "status": "PASSOU|PARCIAL|FALHOU", "detalhe": "<observação>"},
-    {"id": "S2", "titulo": "fat_pedidos (status PT + colunas derivadas)", "status": "PASSOU|PARCIAL|FALHOU", "detalhe": "<observação>"},
-    {"id": "S3", "titulo": "fat_itens_pedidos (mapeamento PT)", "status": "PASSOU|PARCIAL|FALHOU", "detalhe": "<observação>"},
-    {"id": "S4", "titulo": "fat_pagamentos_pedidos (tipos PT)", "status": "PASSOU|PARCIAL|FALHOU", "detalhe": "<observação>"},
-    {"id": "S5", "titulo": "fat_avaliacoes_pedidos (limpeza + try_timestamp)", "status": "PASSOU|PARCIAL|FALHOU", "detalhe": "<observação>"},
-    {"id": "S6", "titulo": "dim_produtos (dedup + mapeamento)", "status": "PASSOU|PARCIAL|FALHOU", "detalhe": "<observação>"},
-    {"id": "S7", "titulo": "dim_vendedores (dedup + upper)", "status": "PASSOU|PARCIAL|FALHOU", "detalhe": "<observação>"},
-    {"id": "S8", "titulo": "dim_categoria_traducao", "status": "PASSOU|PARCIAL|FALHOU", "detalhe": "<observação>"},
-    {"id": "S9", "titulo": "dim_cotacao_dolar (calendário contínuo)", "status": "PASSOU|PARCIAL|FALHOU", "detalhe": "<observação>"},
-    {"id": "S10", "titulo": "fat_pedido_total (join + 2 casas decimais)", "status": "PASSOU|PARCIAL|FALHOU", "detalhe": "<observação>"},
-    {"id": "S11", "titulo": "OPTIMIZE + ZORDER", "status": "PASSOU|PARCIAL|FALHOU", "detalhe": "<observação>"}
-  ],
-  "gold": [
-    {"id": "G1", "titulo": "fat_vendas_comercial (métricas completas)", "status": "PASSOU|PARCIAL|FALHOU", "detalhe": "<observação>"},
-    {"id": "G2", "titulo": "Rankings Top 5 mais/menos vendidos", "status": "PASSOU|PARCIAL|FALHOU", "detalhe": "<observação>"},
-    {"id": "G3", "titulo": "fat_avaliacoes_clientes (métricas completas)", "status": "PASSOU|PARCIAL|FALHOU", "detalhe": "<observação>"},
-    {"id": "G4", "titulo": "Rankings qualidade (desempate por volume)", "status": "PASSOU|PARCIAL|FALHOU", "detalhe": "<observação>"}
-  ],
-  "relatorio_completo": "<relatório narrativo detalhado para o professor, com observações sobre qualidade do código, boas práticas, pontos de atenção e sugestão de nota final. Mínimo 300 palavras.>"
-}
-`;
- 
-function handleFile(input, layer) {
-  const file = input.files[0];
-  if (!file) return;
-  files[layer] = file;
-  document.getElementById('name-' + layer).textContent = file.name;
-  document.getElementById('box-' + layer).classList.add('has-file');
-  checkReady();
+function startFlow() {
+  studentName = document.getElementById('studentName').value.trim() || 'Aluno';
+  document.getElementById('nameCard').style.display = 'none';
+  document.getElementById('stepper').style.display = 'flex';
+  showUpload(0);
 }
  
-function checkReady() {
-  const hasAll = files.bronze && files.silver && files.gold;
-  document.getElementById('analyzeBtn').disabled = !hasAll;
-}
- 
-function resetAll() {
-  files.bronze = files.silver = files.gold = null;
-  ['bronze','silver','gold'].forEach(l => {
-    document.getElementById('name-' + l).textContent = 'Nenhum arquivo';
-    document.getElementById('box-' + l).classList.remove('has-file');
-  });
-  document.querySelectorAll('input[type=file]').forEach(i => i.value = '');
-  document.getElementById('reportArea').classList.remove('visible');
-  document.getElementById('progressArea').classList.remove('visible');
+function showUpload(i) {
+  idx = i;
+  currentFile = null;
+  const L = LAYERS[i];
+  document.getElementById('uploadCard').style.display = 'block';
+  document.getElementById('thinkingCard').style.display = 'none';
   document.getElementById('errorBox').style.display = 'none';
-  document.getElementById('studentName').value = '';
-  checkReady();
+  document.getElementById('uploadTitle').textContent = `Notebook ${L.label}  —  ${L.sub}`;
+  document.getElementById('uzIcon').textContent = L.icon;
+  document.getElementById('uzTitle').textContent = `Arraste ou clique para selecionar o notebook ${L.key}`;
+  document.getElementById('uzSub').textContent = L.sub + ' · .ipynb';
+  document.getElementById('uzFile').textContent = '';
+  document.getElementById('uploadZone').classList.remove('has-file');
+  document.getElementById('fileInput').value = '';
+  document.getElementById('analyzeBtn').disabled = true;
+  updateStepper(i);
 }
  
-async function readNotebook(file) {
+function updateStepper(active) {
+  for (let i = 0; i <= 3; i++) {
+    const el = document.getElementById('step-' + i);
+    el.className = 'step';
+    const c = el.querySelector('.step-circle');
+    if (i < active)      { el.classList.add('done');   c.textContent = '✓'; }
+    else if (i === active){ el.classList.add('active'); c.textContent = i + 1; }
+    else                  { c.textContent = i + 1; }
+  }
+}
+ 
+function onFileSelected(input) {
+  const f = input.files[0];
+  if (!f) return;
+  currentFile = f;
+  document.getElementById('uzFile').textContent = f.name;
+  document.getElementById('uploadZone').classList.add('has-file');
+  document.getElementById('analyzeBtn').disabled = false;
+}
+ 
+async function readNotebook(file, limit) {
   return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onload = e => {
+    const r = new FileReader();
+    r.onload = e => {
       try {
         const nb = JSON.parse(e.target.result);
-        let code = '';
-        let cellNum = 0;
+        let code = '', n = 0;
         (nb.cells || []).forEach(cell => {
-          if (cell.cell_type === 'code') {
-            const src = (Array.isArray(cell.source) ? cell.source.join('') : cell.source).trim();
-            if (!src) return;
-            // Ignora células que são só comandos mágicos, pip install ou display puro
-            const lines = src.split('\n');
-            const meaningfulLines = lines.filter(l => {
-              const t = l.trim();
-              return t && !t.startsWith('%') && !t.startsWith('!') && !t.startsWith('#');
-            });
-            if (meaningfulLines.length === 0) return;
-            // Ignora células cujo único conteúdo útil é display() ou print() simples
-            if (meaningfulLines.length <= 2 && meaningfulLines.every(l => /^(display|print|show)\s*\(/.test(l.trim()))) return;
-            cellNum++;
-            code += `# --- Célula ${cellNum} ---\n${src}\n\n`;
-          }
+          if (cell.cell_type !== 'code') return;
+          const src = (Array.isArray(cell.source) ? cell.source.join('') : cell.source).trim();
+          if (!src) return;
+          const useful = src.split('\n').filter(l => {
+            const t = l.trim();
+            return t && !t.startsWith('%') && !t.startsWith('!') && !t.startsWith('#');
+          });
+          if (!useful.length) return;
+          if (useful.length <= 2 && useful.every(l => /^(display|print|show)\s*\(/.test(l.trim()))) return;
+          code += `# --- Célula ${++n} ---\n${src}\n\n`;
         });
-        resolve(code);
+        resolve(code.substring(0, limit));
       } catch(err) { reject(err); }
     };
-    reader.onerror = reject;
-    reader.readAsText(file);
+    r.onerror = reject;
+    r.readAsText(file);
   });
 }
  
-function setProgress(pct, msg) {
-  document.getElementById('progressBar').style.width = pct + '%';
-  document.getElementById('progressStatus').textContent = msg;
-}
- 
-async function startAnalysis() {
-  const apiKey = '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';
-  const studentName = document.getElementById('studentName').value.trim() || 'Aluno';
- 
-  document.getElementById('analyzeBtn').disabled = true;
-  document.getElementById('progressArea').classList.add('visible');
-  document.getElementById('reportArea').classList.remove('visible');
+async function runAnalysis() {
+  document.getElementById('uploadCard').style.display = 'none';
+  document.getElementById('thinkingCard').style.display = 'block';
+  document.getElementById('thinkingText').textContent = `Analisando notebook ${LAYERS[idx].label}...`;
   document.getElementById('errorBox').style.display = 'none';
  
   try {
-    setProgress(10, 'Lendo notebook Bronze...');
-    const bronzeCode = await readNotebook(files.bronze);
-    setProgress(25, 'Lendo notebook Silver...');
-    const silverCode = await readNotebook(files.silver);
-    setProgress(40, 'Lendo notebook Gold...');
-    const goldCode = await readNotebook(files.gold);
- 
-    setProgress(55, 'Enviando para análise da IA...');
- 
-    const userMessage = `Analise os notebooks de engenharia de dados do aluno abaixo e gere a avaliação conforme o gabarito.
- 
-=== NOTEBOOK BRONZE ===
-${bronzeCode.substring(0, 18000)}
- 
-=== NOTEBOOK SILVER ===
-${silverCode.substring(0, 28000)}
- 
-=== NOTEBOOK GOLD ===
-${goldCode.substring(0, 16000)}
-`;
- 
-    const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+    const code = await readNotebook(currentFile, LIMITS[idx]);
+    const res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${apiKey}`
-      },
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${API_KEY}` },
       body: JSON.stringify({
         model: 'llama-3.3-70b-versatile',
-        max_tokens: 4000,
-        temperature: 0.2,
+        max_tokens: 1800,
+        temperature: 0.1,
         messages: [
-          { role: 'system', content: GABARITO },
-          { role: 'user', content: userMessage }
+          { role: 'system', content: SYS },
+          { role: 'user',   content: PROMPTS[idx] + '\n\nCÓDIGO DO NOTEBOOK:\n' + code }
         ]
       })
     });
  
-    setProgress(85, 'Processando resultado...');
- 
-    if (!response.ok) {
-      const err = await response.json();
-      throw new Error(err.error?.message || 'Erro na API Groq');
+    if (!res.ok) {
+      const e = await res.json();
+      throw new Error(e.error?.message || 'Erro na API Groq');
     }
  
-    const data = await response.json();
-    const raw = data.choices?.[0]?.message?.content;
-    if (!raw) throw new Error('Resposta vazia da API. Tente novamente.');
- 
+    const data = await res.json();
+    const raw  = data.choices?.[0]?.message?.content || '';
     let result;
-    try {
-      const clean = raw.replace(/```json|```/g, '').trim();
-      result = JSON.parse(clean);
-    } catch(e) {
-      throw new Error('A IA retornou um formato inesperado. Tente novamente.');
-    }
+    try { result = JSON.parse(raw.replace(/```json|```/g,'').trim()); }
+    catch(e) { throw new Error('Formato de resposta inválido. Tente novamente.'); }
  
-    setProgress(100, 'Concluído!');
-    renderReport(result, studentName);
+    results.push(result);
+    narrativas.push(`[${LAYERS[idx].key.toUpperCase()}] ${result.narrativa}`);
+ 
+    document.getElementById('thinkingCard').style.display = 'none';
+    renderLayer(idx, result);
+ 
+    if (idx + 1 < LAYERS.length) {
+      showUpload(idx + 1);
+    } else {
+      updateStepper(3);
+      renderFinal();
+    }
  
   } catch(err) {
-    document.getElementById('progressArea').classList.remove('visible');
+    document.getElementById('thinkingCard').style.display = 'none';
+    document.getElementById('uploadCard').style.display = 'block';
     document.getElementById('errorBox').style.display = 'block';
     document.getElementById('errorBox').textContent = 'Erro: ' + err.message;
     document.getElementById('analyzeBtn').disabled = false;
   }
 }
  
-function renderReport(r, name) {
-  document.getElementById('progressArea').classList.remove('visible');
-  document.getElementById('reportArea').classList.add('visible');
- 
-  document.getElementById('studentNameDisplay').textContent = name;
-  document.getElementById('scoreBig').textContent = Number(r.nota_total).toFixed(1);
-  document.getElementById('scoreBronze').textContent = Number(r.nota_bronze).toFixed(1);
-  document.getElementById('scoresilver').textContent = Number(r.nota_silver).toFixed(1);
-  document.getElementById('scoreGold').textContent = Number(r.nota_gold).toFixed(1);
- 
-  const pct = (r.nota_total / 10) * 100;
-  const bar = document.getElementById('scoreBar');
-  bar.style.width = pct + '%';
-  bar.style.background = pct >= 70 ? '#16a34a' : pct >= 50 ? '#d97706' : '#dc2626';
- 
-  document.getElementById('bronze-score-label').textContent = r.nota_bronze + ' / 2 pts';
-  document.getElementById('silver-score-label').textContent = r.nota_silver + ' / 5 pts';
-  document.getElementById('gold-score-label').textContent = r.nota_gold + ' / 3 pts';
- 
-  renderChecks('bronze-checks', r.bronze);
-  renderChecks('silver-checks', r.silver);
-  renderChecks('gold-checks', r.gold);
- 
-  document.getElementById('fullReport').textContent =
-    `ALUNO: ${name}\nNOTA TOTAL: ${r.nota_total}/10\nBronze: ${r.nota_bronze}/2 | Silver: ${r.nota_silver}/5 | Gold: ${r.nota_gold}/3\n\nRESUMO:\n${r.resumo_geral}\n\n${'='.repeat(60)}\nRELATÓRIO DETALHADO:\n${r.relatorio_completo}`;
- 
-  ['bronze-checks','silver-checks','gold-checks'].forEach(id => {
-    document.getElementById(id).classList.add('open');
-  });
- 
-  document.getElementById('analyzeBtn').disabled = false;
-}
- 
-function renderChecks(containerId, checks) {
-  const el = document.getElementById(containerId);
-  el.innerHTML = checks.map(c => {
-    const iconClass = c.status === 'PASSOU' ? 'check-pass' : c.status === 'PARCIAL' ? 'check-partial' : 'check-fail';
-    const iconText = c.status === 'PASSOU' ? '✓' : c.status === 'PARCIAL' ? '~' : '✗';
+function renderLayer(i, r) {
+  const L   = LAYERS[i];
+  const nota = Number(r.nota).toFixed(1);
+  const html = r.checks.map(c => {
+    const cls  = c.status==='PASSOU' ? 'check-pass' : c.status==='PARCIAL' ? 'check-partial' : 'check-fail';
+    const icon = c.status==='PASSOU' ? '✓' : c.status==='PARCIAL' ? '~' : '✗';
     return `<div class="check-item">
-      <div class="check-icon ${iconClass}">${iconText}</div>
-      <div class="check-text">
-        <span style="font-weight:500;">[${c.id}] ${c.titulo}</span>
-        <div class="check-detail">${c.detalhe}</div>
-      </div>
+      <div class="check-icon ${cls}">${icon}</div>
+      <div><div class="check-label">[${c.id}] ${c.titulo}</div><div class="check-detail">${c.detalhe}</div></div>
     </div>`;
   }).join('');
+ 
+  const div = document.createElement('div');
+  div.className = `layer-result ${L.key}`;
+  div.innerHTML = `
+    <div class="layer-result-header" onclick="this.nextElementSibling.classList.toggle('open')">
+      <div class="layer-result-title">${L.icon} Camada ${L.key.charAt(0).toUpperCase()+L.key.slice(1)}</div>
+      <span class="score-pill ${L.pill}">${nota} / ${L.max} pts</span>
+    </div>
+    <div class="layer-result-body open">
+      ${html}
+      <div class="narrative">${r.narrativa}</div>
+    </div>`;
+  document.getElementById('resultsArea').appendChild(div);
 }
  
-function toggleLayer(id) {
-  document.getElementById(id).classList.toggle('open');
+function renderFinal() {
+  const nb = Number(results[0]?.nota||0);
+  const ns = Number(results[1]?.nota||0);
+  const ng = Number(results[2]?.nota||0);
+  const total = nb + ns + ng;
+  const pct = (total/10)*100;
+ 
+  document.getElementById('finalCard').style.display = 'block';
+  document.getElementById('finalName').textContent = studentName;
+  document.getElementById('scoreTotal').textContent = total.toFixed(1);
+  document.getElementById('scBronze').textContent = nb.toFixed(1);
+  document.getElementById('scSilver').textContent = ns.toFixed(1);
+  document.getElementById('scGold').textContent   = ng.toFixed(1);
+ 
+  const bar = document.getElementById('scoreBar');
+  bar.style.width = pct + '%';
+  bar.style.background = pct>=70 ? '#16a34a' : pct>=50 ? '#d97706' : '#dc2626';
+ 
+  const report = [
+    `ALUNO: ${studentName}`,
+    `NOTA TOTAL: ${total.toFixed(1)} / 10`,
+    `Bronze: ${nb.toFixed(1)}/2  |  Silver: ${ns.toFixed(1)}/5  |  Gold: ${ng.toFixed(1)}/3`,
+    '', '='.repeat(50), 'ANÁLISE POR CAMADA', '='.repeat(50), '',
+    ...narrativas, '',
+    '='.repeat(50), 'CRITÉRIOS DETALHADOS', '='.repeat(50), '',
+    ...LAYERS.map((L,i) => {
+      const r = results[i]; if(!r) return '';
+      return `--- ${L.key.toUpperCase()} ---\n` +
+        r.checks.map(c=>`[${c.status}] ${c.id} — ${c.titulo}\n  ${c.detalhe}`).join('\n');
+    })
+  ].join('\n');
+ 
+  document.getElementById('reportBox').textContent = report;
+  document.getElementById('finalCard').scrollIntoView({ behavior:'smooth' });
 }
  
-function switchTab(name) {
-  document.querySelectorAll('.tab').forEach((t,i) => {
-    t.classList.toggle('active', (i===0 && name==='checks') || (i===1 && name==='full'));
-  });
-  document.getElementById('tab-checks').classList.toggle('active', name==='checks');
-  document.getElementById('tab-full').classList.toggle('active', name==='full');
+function toggleReport() {
+  document.getElementById('reportBox').classList.toggle('open');
 }
  
 function copyReport() {
-  const text = document.getElementById('fullReport').textContent;
-  navigator.clipboard.writeText(text).then(() => {
-    const btn = document.querySelector('.copy-btn');
-    btn.textContent = 'Copiado!';
-    setTimeout(() => btn.textContent = 'Copiar relatório', 2000);
+  navigator.clipboard.writeText(document.getElementById('reportBox').textContent).then(() => {
+    event.target.textContent = 'Copiado!';
+    setTimeout(() => event.target.textContent = 'Copiar relatório', 2000);
   });
+}
+ 
+function resetAll() {
+  idx=0; currentFile=null; results=[]; narrativas=[];
+  studentName='';
+  document.getElementById('nameCard').style.display='block';
+  document.getElementById('stepper').style.display='none';
+  document.getElementById('uploadCard').style.display='none';
+  document.getElementById('thinkingCard').style.display='none';
+  document.getElementById('finalCard').style.display='none';
+  document.getElementById('errorBox').style.display='none';
+  document.getElementById('resultsArea').innerHTML='';
+  document.getElementById('studentName').value='';
+  document.getElementById('reportBox').classList.remove('open');
 }
 </script>
 </body>
