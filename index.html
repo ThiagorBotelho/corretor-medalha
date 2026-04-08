@@ -222,6 +222,13 @@
         <div class="guide-step">
           <div class="guide-num">4</div>
           <div class="guide-content">
+            <h3>Critério de qualidade e documentação</h3>
+            <p>Cada camada possui um critério extra que avalia a <strong>qualidade da escrita do código e da documentação</strong> (B4, S12, G5). Ele vale 10% da nota da camada: 0.2 pts no Bronze, 0.5 pts no Silver e 0.3 pts no Gold. A IA verifica se o aluno comentou o código explicando as regras de negócio, usou nomes de variáveis descritivos e organizou as células de forma lógica. Um aluno que acertou todos os critérios funcionais mas não documentou nada não consegue nota máxima.</p>
+          </div>
+        </div>
+        <div class="guide-step">
+          <div class="guide-num">5</div>
+          <div class="guide-content">
             <h3>A nota é uma sugestão</h3>
             <p>A IA analisa a estrutura e lógica do código. A nota sugerida deve ser revisada pelo professor antes de lançar — use os critérios detalhados e a narrativa de cada camada para embasar sua decisão.</p>
           </div>
@@ -388,17 +395,22 @@ const SYS = `Você é avaliador especialista em Engenharia de Dados com domínio
 const PROMPTS = [
 `Avalie o notebook BRONZE de um projeto Arquitetura Medalhão (dataset Olist e-commerce brasileiro).
  
-CRITÉRIOS:
+CRITÉRIOS FUNCIONAIS (valem 1.8 pts no total):
 B1 — 9 tabelas com nomes exatos: bronze.tb_customers, bronze.tb_geolocalizacao, bronze.tb_order_items, bronze.tb_order_payments, bronze.tb_order_reviews, bronze.tb_orders, bronze.tb_products, bronze.tb_sellers, bronze.tb_product_category_name_translation
 B2 — Coluna timestamp_ingestion em todas as tabelas registrando momento exato da inserção
 B3 — Ingestão API PTAX Banco Central criando bronze.tb_cotacao_dolar com datas formato MM-DD-AAAA
  
+CRITÉRIO DE QUALIDADE (vale 0.2 pt):
+B4 — Qualidade e documentação do código: o notebook possui comentários explicando o que cada bloco faz e justificando as regras de negócio? Os nomes de variáveis e DataFrames são descritivos (não genéricos como df, df2, temp)? O código está organizado em etapas lógicas e sem repetição desnecessária? Avalie como PASSOU (documentação clara e completa), PARCIAL (comentários existem mas são superficiais ou incompletos) ou FALHOU (ausência de comentários ou código desorganizado).
+ 
+REGRA DE NOTA: Os critérios B1, B2, B3 valem juntos 1.8 pts (0.6 cada). B4 vale 0.2 pt. PASSOU=valor cheio, PARCIAL=metade, FALHOU=zero. Some tudo para chegar à nota final de 0.0 a 2.0.
+ 
 Responda com este JSON (sem markdown):
-{"nota":<0.0 a 2.0>,"checks":[{"id":"B1","titulo":"9 tabelas bronze criadas","status":"PASSOU|PARCIAL|FALHOU","detalhe":"<observação concisa>"},{"id":"B2","titulo":"Coluna timestamp_ingestion","status":"PASSOU|PARCIAL|FALHOU","detalhe":"<observação concisa>"},{"id":"B3","titulo":"Ingestão API PTAX","status":"PASSOU|PARCIAL|FALHOU","detalhe":"<observação concisa>"}],"narrativa":"<3-4 frases sobre qualidade geral do bronze>","positivos":"<pontos fortes do notebook em 1-2 frases diretas>","negativos":"<o que poderia ter feito melhor em 1-2 frases diretas, ou vazio se não houver>"}`,
+{"nota":<0.0 a 2.0>,"checks":[{"id":"B1","titulo":"9 tabelas bronze criadas","status":"PASSOU|PARCIAL|FALHOU","detalhe":"<observação concisa>"},{"id":"B2","titulo":"Coluna timestamp_ingestion","status":"PASSOU|PARCIAL|FALHOU","detalhe":"<observação concisa>"},{"id":"B3","titulo":"Ingestão API PTAX","status":"PASSOU|PARCIAL|FALHOU","detalhe":"<observação concisa>"},{"id":"B4","titulo":"Qualidade e documentação do código","status":"PASSOU|PARCIAL|FALHOU","detalhe":"<observação sobre comentários, nomes de variáveis e organização>"}],"narrativa":"<3-4 frases sobre qualidade geral do bronze>","positivos":"<pontos fortes do notebook em 1-2 frases diretas>","negativos":"<o que poderia ter feito melhor em 1-2 frases diretas, ou vazio se não houver>"}`,
  
 `Avalie o notebook SILVER de um projeto Arquitetura Medalhão (dataset Olist).
  
-CRITÉRIOS:
+CRITÉRIOS FUNCIONAIS (valem 4.5 pts no total, 0.409 pts cada):
 S1 — dim_consumidores: Window Function ROW_NUMBER particionado por customer_id desc timestamp_ingestion; colunas PT: id_consumidor, prefixo_cep, nome_consumidor, cidade, estado; cidade/estado UPPER CASE
 S2 — fat_pedidos: status PT (delivered→entregue, canceled→cancelado, shipped→enviado, processing→processando, unavailable→indisponível, invoiced→faturado, created→criado, approved→aprovado); derivadas: tempo_entrega_dias, tempo_entrega_estimado_dias, diferenca_entrega_dias, entrega_no_prazo
 S3 — fat_itens_pedidos: order_id→id_pedido, order_item_id→id_item, product_id→id_produto, seller_id→id_vendedor, price→preco_BRL, freight_value→preco_frete
@@ -411,19 +423,29 @@ S9 — dim_cotacao_dolar: calendário contínuo fins de semana, last(ignorenulls
 S10 — fat_pedido_total: join fat_pedidos+pagamentos+cotacao; id_pedido, id_consumidor, status, valor_total_pago_brl, valor_total_pago_usd, data_pedido; 2 casas decimais
 S11 — OPTIMIZE + ZORDER nas tabelas fato por id_pedido e data_pedido
  
+CRITÉRIO DE QUALIDADE (vale 0.5 pt):
+S12 — Qualidade e documentação do código: o notebook possui comentários explicando cada transformação e justificando as regras de negócio aplicadas? Os nomes de variáveis e DataFrames são descritivos? O código está organizado em etapas lógicas sem repetição desnecessária? Avalie como PASSOU (documentação clara e completa), PARCIAL (comentários existem mas são superficiais ou incompletos) ou FALHOU (ausência de comentários ou código desorganizado).
+ 
+REGRA DE NOTA: Critérios S1–S11 valem 4.5 pts (≈0.409 cada). S12 vale 0.5 pt. PASSOU=valor cheio, PARCIAL=metade, FALHOU=zero. Some tudo para nota final de 0.0 a 5.0.
+ 
 Responda com este JSON (sem markdown):
-{"nota":<0.0 a 5.0>,"checks":[{"id":"S1","titulo":"dim_consumidores","status":"PASSOU|PARCIAL|FALHOU","detalhe":""},{"id":"S2","titulo":"fat_pedidos","status":"PASSOU|PARCIAL|FALHOU","detalhe":""},{"id":"S3","titulo":"fat_itens_pedidos","status":"PASSOU|PARCIAL|FALHOU","detalhe":""},{"id":"S4","titulo":"fat_pagamentos_pedidos","status":"PASSOU|PARCIAL|FALHOU","detalhe":""},{"id":"S5","titulo":"fat_avaliacoes_pedidos","status":"PASSOU|PARCIAL|FALHOU","detalhe":""},{"id":"S6","titulo":"dim_produtos","status":"PASSOU|PARCIAL|FALHOU","detalhe":""},{"id":"S7","titulo":"dim_vendedores","status":"PASSOU|PARCIAL|FALHOU","detalhe":""},{"id":"S8","titulo":"dim_categoria_traducao","status":"PASSOU|PARCIAL|FALHOU","detalhe":""},{"id":"S9","titulo":"dim_cotacao_dolar","status":"PASSOU|PARCIAL|FALHOU","detalhe":""},{"id":"S10","titulo":"fat_pedido_total","status":"PASSOU|PARCIAL|FALHOU","detalhe":""},{"id":"S11","titulo":"OPTIMIZE + ZORDER","status":"PASSOU|PARCIAL|FALHOU","detalhe":""}],"narrativa":"<3-4 frases sobre qualidade geral do silver>","positivos":"<pontos fortes em 1-2 frases>","negativos":"<o que poderia ter feito melhor em 1-2 frases, ou vazio se não houver>"}`,
+{"nota":<0.0 a 5.0>,"checks":[{"id":"S1","titulo":"dim_consumidores","status":"PASSOU|PARCIAL|FALHOU","detalhe":""},{"id":"S2","titulo":"fat_pedidos","status":"PASSOU|PARCIAL|FALHOU","detalhe":""},{"id":"S3","titulo":"fat_itens_pedidos","status":"PASSOU|PARCIAL|FALHOU","detalhe":""},{"id":"S4","titulo":"fat_pagamentos_pedidos","status":"PASSOU|PARCIAL|FALHOU","detalhe":""},{"id":"S5","titulo":"fat_avaliacoes_pedidos","status":"PASSOU|PARCIAL|FALHOU","detalhe":""},{"id":"S6","titulo":"dim_produtos","status":"PASSOU|PARCIAL|FALHOU","detalhe":""},{"id":"S7","titulo":"dim_vendedores","status":"PASSOU|PARCIAL|FALHOU","detalhe":""},{"id":"S8","titulo":"dim_categoria_traducao","status":"PASSOU|PARCIAL|FALHOU","detalhe":""},{"id":"S9","titulo":"dim_cotacao_dolar","status":"PASSOU|PARCIAL|FALHOU","detalhe":""},{"id":"S10","titulo":"fat_pedido_total","status":"PASSOU|PARCIAL|FALHOU","detalhe":""},{"id":"S11","titulo":"OPTIMIZE + ZORDER","status":"PASSOU|PARCIAL|FALHOU","detalhe":""},{"id":"S12","titulo":"Qualidade e documentação do código","status":"PASSOU|PARCIAL|FALHOU","detalhe":"<observação sobre comentários, nomes de variáveis e organização>"}],"narrativa":"<3-4 frases sobre qualidade geral do silver>","positivos":"<pontos fortes em 1-2 frases>","negativos":"<o que poderia ter feito melhor em 1-2 frases, ou vazio se não houver>"}`,
  
 `Avalie o notebook GOLD de um projeto Arquitetura Medalhão (dataset Olist).
  
-CRITÉRIOS:
+CRITÉRIOS FUNCIONAIS (valem 2.7 pts no total, 0.675 pts cada):
 G1 — fat_vendas_comercial: granularidade ano+mês+categoria; métricas: ano_venda, mes_venda, categoria_produto, total_pedidos (countDistinct), qtd_itens_vendidos, receita_total_brl, receita_total_usd, ticket_medio_brl; 2 casas decimais
 G2 — Rankings Top 5 via display(): mais vendidos (nome, categoria, qtd) e menos vendidos
 G3 — fat_avaliacoes_clientes: granularidade categoria+vendedor+estado; total_avaliacoes, avaliacao_media, total_avaliacoes_positivas>=4, total_avaliacoes_negativas<=2, percentual_satisfacao
 G4 — Rankings qualidade via display(): produto mais/menos avaliado, vendedor mais/menos avaliado, desempate por volume desc
  
+CRITÉRIO DE QUALIDADE (vale 0.3 pt):
+G5 — Qualidade e documentação do código: o notebook possui comentários explicando cada agregação e a lógica de cada Data Mart? Os nomes de variáveis são descritivos? O código está organizado e sem repetição desnecessária? Avalie como PASSOU (documentação clara e completa), PARCIAL (comentários existem mas são superficiais) ou FALHOU (ausência de comentários ou código desorganizado).
+ 
+REGRA DE NOTA: Critérios G1–G4 valem 2.7 pts (0.675 cada). G5 vale 0.3 pt. PASSOU=valor cheio, PARCIAL=metade, FALHOU=zero. Some tudo para nota final de 0.0 a 3.0.
+ 
 Responda com este JSON (sem markdown):
-{"nota":<0.0 a 3.0>,"checks":[{"id":"G1","titulo":"fat_vendas_comercial","status":"PASSOU|PARCIAL|FALHOU","detalhe":""},{"id":"G2","titulo":"Rankings Top 5 vendidos","status":"PASSOU|PARCIAL|FALHOU","detalhe":""},{"id":"G3","titulo":"fat_avaliacoes_clientes","status":"PASSOU|PARCIAL|FALHOU","detalhe":""},{"id":"G4","titulo":"Rankings qualidade","status":"PASSOU|PARCIAL|FALHOU","detalhe":""}],"narrativa":"<3-4 frases sobre qualidade geral do gold>","positivos":"<pontos fortes em 1-2 frases>","negativos":"<o que poderia ter feito melhor em 1-2 frases, ou vazio se não houver>"}`
+{"nota":<0.0 a 3.0>,"checks":[{"id":"G1","titulo":"fat_vendas_comercial","status":"PASSOU|PARCIAL|FALHOU","detalhe":""},{"id":"G2","titulo":"Rankings Top 5 vendidos","status":"PASSOU|PARCIAL|FALHOU","detalhe":""},{"id":"G3","titulo":"fat_avaliacoes_clientes","status":"PASSOU|PARCIAL|FALHOU","detalhe":""},{"id":"G4","titulo":"Rankings qualidade","status":"PASSOU|PARCIAL|FALHOU","detalhe":""},{"id":"G5","titulo":"Qualidade e documentação do código","status":"PASSOU|PARCIAL|FALHOU","detalhe":"<observação sobre comentários, nomes de variáveis e organização>"}],"narrativa":"<3-4 frases sobre qualidade geral do gold>","positivos":"<pontos fortes em 1-2 frases>","negativos":"<o que poderia ter feito melhor em 1-2 frases, ou vazio se não houver>"}`
 ];
  
 let idx = 0, currentFile = null, studentName = '', apiKey = '';
@@ -497,9 +519,11 @@ async function readNotebook(file, limit) {
           if (cell.cell_type !== 'code') return;
           const src = (Array.isArray(cell.source) ? cell.source.join('') : cell.source).trim();
           if (!src) return;
+          // useful = linhas que não são só mágicos/pip (para decidir se a célula vale incluir)
+          // comentários (#) são MANTIDOS — a IA precisa deles para avaliar documentação
           const useful = src.split('\n').filter(l => {
             const t = l.trim();
-            return t && !t.startsWith('%') && !t.startsWith('!') && !t.startsWith('#');
+            return t && !t.startsWith('%') && !t.startsWith('!');
           });
           if (!useful.length) return;
           if (useful.length <= 2 && useful.every(l => /^(display|print|show)\s*\(/.test(l.trim()))) return;
