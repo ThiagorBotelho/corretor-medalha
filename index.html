@@ -11,16 +11,23 @@
   .header { background: #fff; border-bottom: 1px solid #e5e5e3; padding: 1rem 2rem; display: flex; align-items: center; gap: 12px; }
   .header-icon { width: 36px; height: 36px; background: #1a1a1a; border-radius: 8px; display: flex; align-items: center; justify-content: center; }
   .header-icon svg { width: 20px; height: 20px; fill: none; stroke: #fff; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+  .header-title { flex: 1; }
   .header h1 { font-size: 16px; font-weight: 600; }
   .header p { font-size: 13px; color: #666; }
+  .header-guide-btn { font-size: 13px; font-weight: 500; color: #555; background: #f0f0ee; border: 1px solid #ddd; border-radius: 8px; padding: 6px 14px; cursor: pointer; white-space: nowrap; }
+  .header-guide-btn:hover { background: #e5e5e3; }
+ 
   .container { max-width: 780px; margin: 0 auto; padding: 2rem 1rem; }
  
   .card { background: #fff; border: 1px solid #e5e5e3; border-radius: 12px; padding: 1.5rem; margin-bottom: 1.5rem; }
-  .card-title { font-size: 14px; font-weight: 600; margin-bottom: 1rem; }
+  .card-title { font-size: 14px; font-weight: 600; margin-bottom: 1rem; display: flex; align-items: center; gap: 8px; }
+  .badge { font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 20px; background: #e8f0fe; color: #1a56db; }
  
-  label { font-size: 13px; font-weight: 500; display: block; margin-bottom: 6px; color: #444; }
-  input[type="text"] { width: 100%; padding: 8px 12px; border: 1px solid #ddd; border-radius: 8px; font-size: 14px; outline: none; transition: border 0.15s; }
+  label { font-size: 13px; font-weight: 500; display: block; margin-bottom: 5px; color: #444; }
+  input[type="text"], input[type="password"] { width: 100%; padding: 8px 12px; border: 1px solid #ddd; border-radius: 8px; font-size: 14px; outline: none; transition: border 0.15s; }
   input:focus { border-color: #888; }
+  .input-hint { font-size: 12px; color: #888; margin-top: 4px; }
+  .input-hint a { color: #1a56db; }
  
   .btn { display: inline-flex; align-items: center; gap: 8px; padding: 10px 20px; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; border: none; transition: background 0.15s, opacity 0.15s; }
   .btn-primary { background: #1a1a1a; color: #fff; }
@@ -30,6 +37,26 @@
   .btn-secondary:hover { background: #e5e5e3; }
   .btn-ghost { background: transparent; color: #555; font-size: 13px; padding: 8px 14px; border: 1px solid #ddd; border-radius: 8px; cursor: pointer; font-weight: 500; }
   .btn-ghost:hover { background: #f5f5f3; }
+  .btn-green { background: #16a34a; color: #fff; }
+  .btn-green:hover { background: #15803d; }
+ 
+  /* Guide modal */
+  .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.45); z-index: 100; align-items: center; justify-content: center; padding: 1rem; }
+  .modal-overlay.open { display: flex; }
+  .modal { background: #fff; border-radius: 14px; max-width: 620px; width: 100%; max-height: 88vh; overflow-y: auto; }
+  .modal-header { padding: 1.25rem 1.5rem; border-bottom: 1px solid #f0f0ee; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; background: #fff; z-index: 1; }
+  .modal-header h2 { font-size: 16px; font-weight: 700; }
+  .modal-close { background: none; border: none; font-size: 20px; cursor: pointer; color: #888; line-height: 1; padding: 2px 6px; }
+  .modal-close:hover { color: #333; }
+  .modal-body { padding: 1.5rem; }
+ 
+  .guide-step { display: flex; gap: 14px; margin-bottom: 1.5rem; }
+  .guide-num { width: 28px; height: 28px; border-radius: 50%; background: #1a1a1a; color: #fff; font-size: 13px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; }
+  .guide-content h3 { font-size: 14px; font-weight: 600; margin-bottom: 4px; }
+  .guide-content p { font-size: 13px; color: #555; line-height: 1.6; }
+  .guide-content a { color: #1a56db; }
+  .guide-tip { background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 8px; padding: 10px 14px; font-size: 13px; color: #166534; margin-top: 1rem; line-height: 1.6; }
+  .guide-divider { border: none; border-top: 1px solid #f0f0ee; margin: 1.25rem 0; }
  
   /* Stepper */
   .stepper { display: flex; align-items: flex-start; margin-bottom: 2rem; }
@@ -37,13 +64,13 @@
   .step:not(:last-child)::after { content: ''; position: absolute; top: 15px; left: 55%; width: 90%; height: 2px; background: #e5e5e3; z-index: 0; transition: background 0.4s; }
   .step:not(:last-child).done::after { background: #16a34a; }
   .step-circle { width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; z-index: 1; border: 2px solid #ddd; background: #fff; color: #bbb; transition: all 0.3s; }
-  .step.active .step-circle { border-color: #1a1a1a; color: #1a1a1a; background: #fff; }
+  .step.active .step-circle { border-color: #1a1a1a; color: #1a1a1a; }
   .step.done .step-circle { border-color: #16a34a; background: #16a34a; color: #fff; }
   .step-label { font-size: 11px; color: #bbb; margin-top: 6px; font-weight: 500; text-align: center; }
   .step.active .step-label { color: #1a1a1a; }
   .step.done .step-label { color: #16a34a; }
  
-  /* Upload zone */
+  /* Upload */
   .upload-zone { border: 2px dashed #ddd; border-radius: 12px; padding: 2.5rem 1.5rem; text-align: center; cursor: pointer; transition: all 0.2s; position: relative; }
   .upload-zone:hover { border-color: #888; background: #fafafa; }
   .upload-zone.has-file { border-color: #16a34a; border-style: solid; background: #f0fdf4; }
@@ -52,7 +79,6 @@
   .upload-zone-title { font-size: 15px; font-weight: 600; margin-bottom: 4px; }
   .upload-zone-sub { font-size: 13px; color: #888; }
   .upload-zone-file { font-size: 13px; color: #16a34a; font-weight: 600; margin-top: 8px; }
- 
   .action-row { display: flex; gap: 10px; align-items: center; margin-top: 1rem; flex-wrap: wrap; }
  
   /* Thinking */
@@ -63,7 +89,7 @@
   @keyframes blink { 0%,80%,100%{opacity:0.2} 40%{opacity:1} }
   .thinking-text { font-size: 13px; color: #555; }
  
-  /* Layer result */
+  /* Layer results */
   .layer-result { border-radius: 10px; overflow: hidden; margin-bottom: 1.25rem; border: 1px solid; }
   .layer-result.bronze { border-color: #fed7aa; }
   .layer-result.silver { border-color: #cbd5e1; }
@@ -79,7 +105,6 @@
   .gold-pill   { background: #fef08a; color: #854d0e; }
   .layer-result-body { padding: 0 16px; overflow: hidden; max-height: 0; transition: max-height 0.35s ease; }
   .layer-result-body.open { max-height: 2000px; padding: 4px 16px 16px; }
- 
   .check-item { display: flex; align-items: flex-start; gap: 10px; padding: 8px 0; border-bottom: 1px solid #f0f0ee; }
   .check-item:last-child { border-bottom: none; }
   .check-icon { width: 18px; height: 18px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; font-size: 10px; font-weight: 700; }
@@ -103,40 +128,137 @@
   .mc-bronze { background:#fff7ed; } .mc-bronze .n{color:#c2410c;} .mc-bronze .l{color:#9a3412;}
   .mc-silver { background:#f8fafc; } .mc-silver .n{color:#475569;} .mc-silver .l{color:#64748b;}
   .mc-gold   { background:#fefce8; } .mc-gold .n  {color:#ca8a04;} .mc-gold .l  {color:#a16207;}
-  .student-name { font-size: 20px; font-weight: 700; margin-bottom: 1rem; }
+  .student-name-final { font-size: 20px; font-weight: 700; margin-bottom: 1rem; }
+ 
+  /* Planilha output */
+  .sheet-section { margin-top: 1.5rem; }
+  .sheet-title { font-size: 14px; font-weight: 600; margin-bottom: 8px; display: flex; align-items: center; gap: 8px; }
+  .sheet-grid { display: grid; gap: 8px; }
+  .sheet-row { background: #f8f9fa; border: 1px solid #e5e5e3; border-radius: 8px; }
+  .sheet-row-header { font-size: 11px; font-weight: 600; color: #888; padding: 6px 12px 0; text-transform: uppercase; letter-spacing: 0.04em; }
+  .sheet-row-value { font-size: 13px; color: #1a1a1a; padding: 4px 12px 8px; line-height: 1.5; }
+  .copy-field-btn { font-size: 11px; font-weight: 600; color: #1a56db; background: none; border: none; cursor: pointer; padding: 0; margin-left: 6px; }
+  .copy-field-btn:hover { text-decoration: underline; }
+  .copy-all-row { background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 8px; padding: 12px; margin-top: 8px; }
+  .copy-all-label { font-size: 12px; color: #166534; font-weight: 600; margin-bottom: 6px; }
+  .copy-all-value { font-size: 12px; color: #166534; font-family: monospace; word-break: break-all; background: #dcfce7; border-radius: 6px; padding: 8px 10px; margin-bottom: 8px; }
  
   .report-box { background: #1a1a1a; color: #e5e5e3; border-radius: 10px; padding: 1.25rem; font-size: 12.5px; line-height: 1.75; white-space: pre-wrap; max-height: 480px; overflow-y: auto; margin-top: 1rem; display: none; }
   .report-box.open { display: block; }
- 
   .error-box { background: #fff1f2; border: 1px solid #fecdd3; border-radius: 8px; padding: 1rem; font-size: 13px; color: #9f1239; margin-bottom: 1rem; }
+ 
+  .section-divider { border: none; border-top: 1px solid #e5e5e3; margin: 1.25rem 0; }
  
   @media(max-width:600px) { .mini-grid{grid-template-columns:1fr;} }
 </style>
 </head>
 <body>
  
+<!-- Guide Modal -->
+<div class="modal-overlay" id="guideModal">
+  <div class="modal">
+    <div class="modal-header">
+      <h2>Como usar o Corretor</h2>
+      <button class="modal-close" onclick="closeGuide()">✕</button>
+    </div>
+    <div class="modal-body">
+ 
+      <p style="font-size:13px;color:#555;margin-bottom:1.25rem;line-height:1.6;">Este app usa inteligência artificial para ler os notebooks do aluno e gerar um relatório detalhado com nota sugerida. Siga os passos abaixo para configurar e usar.</p>
+ 
+      <strong style="font-size:13px;">Parte 1 — Criar sua chave de API do Groq (gratuita)</strong>
+      <div style="margin-top:12px;">
+        <div class="guide-step">
+          <div class="guide-num">1</div>
+          <div class="guide-content">
+            <h3>Acesse o console do Groq</h3>
+            <p>Entre em <a href="https://console.groq.com" target="_blank">console.groq.com</a> e crie uma conta gratuita. Você pode entrar com sua conta Google.</p>
+          </div>
+        </div>
+        <div class="guide-step">
+          <div class="guide-num">2</div>
+          <div class="guide-content">
+            <h3>Gere uma chave de API</h3>
+            <p>No menu lateral, clique em <strong>"API Keys"</strong> → <strong>"Create API Key"</strong>. Dê um nome (ex: <em>corretor-medalha</em>) e clique em criar.</p>
+          </div>
+        </div>
+        <div class="guide-step">
+          <div class="guide-num">3</div>
+          <div class="guide-content">
+            <h3>Copie a chave</h3>
+            <p>A chave começa com <code style="background:#f0f0ee;padding:2px 6px;border-radius:4px;">gsk_...</code>. Copie e guarde — ela só aparece uma vez. Cole no campo "Chave de API" do corretor.</p>
+          </div>
+        </div>
+      </div>
+ 
+      <div class="guide-tip">
+        O Groq tem plano <strong>gratuito</strong> sem necessidade de cartão. Cada correção completa (3 notebooks) consome em torno de <strong>6.000 a 10.000 tokens</strong> por chamada — dentro do limite gratuito. Como o corretor analisa cada camada separadamente, o consumo por requisição fica controlado. Se aparecer erro de limite, aguarde alguns segundos e tente novamente.
+      </div>
+ 
+      <hr class="guide-divider">
+ 
+      <strong style="font-size:13px;">Parte 2 — Como usar o corretor</strong>
+      <div style="margin-top:12px;">
+        <div class="guide-step">
+          <div class="guide-num">1</div>
+          <div class="guide-content">
+            <h3>Cole sua chave e insira o nome do aluno</h3>
+            <p>Na tela inicial, cole a chave de API e digite o nome do aluno que será corrigido.</p>
+          </div>
+        </div>
+        <div class="guide-step">
+          <div class="guide-num">2</div>
+          <div class="guide-content">
+            <h3>Upload e análise por etapas</h3>
+            <p>O corretor pede os notebooks um por vez: primeiro o <strong>Bronze</strong>, depois o <strong>Silver</strong> e por último o <strong>Gold</strong>. Faça o upload de cada um e clique em "Analisar" — o resultado de cada camada aparece na tela antes de passar para a próxima.</p>
+          </div>
+        </div>
+        <div class="guide-step">
+          <div class="guide-num">3</div>
+          <div class="guide-content">
+            <h3>Veja o resultado final</h3>
+            <p>Ao terminar o Gold, o app exibe a nota total, breakdown por camada e um bloco pronto para copiar e colar direto no Google Planilhas — com nome, notas, comentários positivos e negativos já separados por coluna.</p>
+          </div>
+        </div>
+        <div class="guide-step">
+          <div class="guide-num">4</div>
+          <div class="guide-content">
+            <h3>A nota é uma sugestão</h3>
+            <p>A IA analisa a estrutura e lógica do código. A nota sugerida deve ser revisada pelo professor antes de lançar — use os critérios detalhados e a narrativa de cada camada para embasar sua decisão.</p>
+          </div>
+        </div>
+      </div>
+ 
+    </div>
+  </div>
+</div>
+ 
+<!-- Header -->
 <div class="header">
   <div class="header-icon">
     <svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
   </div>
-  <div>
+  <div class="header-title">
     <h1>Corretor Automático — Arquitetura Medalhão</h1>
     <p>Engenharia de Dados · Análise por Groq AI</p>
   </div>
+  <button class="header-guide-btn" onclick="openGuide()">Como usar</button>
 </div>
  
 <div class="container">
  
-  <!-- Nome -->
+  <!-- Config: chave + nome -->
   <div class="card" id="nameCard">
-    <div class="card-title">Identificação do aluno</div>
-    <div style="display:flex;gap:10px;align-items:flex-end;">
-      <div style="flex:1;">
-        <label>Nome do aluno</label>
-        <input type="text" id="studentName" placeholder="Ex: João Silva" onkeydown="if(event.key==='Enter')startFlow()" />
-      </div>
-      <button class="btn btn-primary" onclick="startFlow()">Iniciar correção</button>
+    <div class="card-title">Configuração <span class="badge">Passo 1</span></div>
+    <div style="margin-bottom:1rem;">
+      <label>Chave de API Groq</label>
+      <input type="password" id="apiKeyInput" placeholder="gsk_..." oninput="checkReady()" />
+      <div class="input-hint">Gratuita em <a href="https://console.groq.com/keys" target="_blank">console.groq.com/keys</a> · Não é armazenada, fica apenas nesta aba. <a href="#" onclick="openGuide();return false;">Como criar?</a></div>
     </div>
+    <div style="margin-bottom:1rem;">
+      <label>Nome do aluno</label>
+      <input type="text" id="studentName" placeholder="Ex: João Silva" oninput="checkReady()" onkeydown="if(event.key==='Enter')startFlow()" />
+    </div>
+    <button class="btn btn-primary" id="startBtn" onclick="startFlow()" disabled>Iniciar correção</button>
   </div>
  
   <!-- Stepper -->
@@ -147,7 +269,7 @@
     <div class="step" id="step-3"><div class="step-circle">4</div><div class="step-label">Resultado</div></div>
   </div>
  
-  <!-- Upload dinâmico -->
+  <!-- Upload -->
   <div class="card" id="uploadCard" style="display:none;">
     <div class="card-title" id="uploadTitle"></div>
     <div class="upload-zone" id="uploadZone">
@@ -179,7 +301,7 @@
  
   <!-- Score final -->
   <div class="card" id="finalCard" style="display:none;">
-    <div class="student-name" id="finalName"></div>
+    <div class="student-name-final" id="finalName"></div>
     <div class="final-score-row">
       <div>
         <div class="score-big" id="scoreTotal">—</div>
@@ -194,9 +316,58 @@
       <div class="mini-card mc-silver"><div class="n" id="scSilver">—</div><div class="l">Silver / 5 pts</div></div>
       <div class="mini-card mc-gold"  ><div class="n" id="scGold">—</div>  <div class="l">Gold / 3 pts</div></div>
     </div>
+ 
+    <hr class="section-divider">
+ 
+    <!-- Bloco planilha -->
+    <div class="sheet-section">
+      <div class="sheet-title">
+        📋 Exportar para planilha
+      </div>
+      <div class="sheet-grid">
+        <div class="sheet-row">
+          <div class="sheet-row-header">Nome do aluno</div>
+          <div class="sheet-row-value" id="sheetName">—</div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:8px;">
+          <div class="sheet-row">
+            <div class="sheet-row-header">Nota Bronze</div>
+            <div class="sheet-row-value" id="sheetBronze">—</div>
+          </div>
+          <div class="sheet-row">
+            <div class="sheet-row-header">Nota Silver</div>
+            <div class="sheet-row-value" id="sheetSilver">—</div>
+          </div>
+          <div class="sheet-row">
+            <div class="sheet-row-header">Nota Gold</div>
+            <div class="sheet-row-value" id="sheetGold">—</div>
+          </div>
+          <div class="sheet-row">
+            <div class="sheet-row-header">Nota Final</div>
+            <div class="sheet-row-value" id="sheetTotal">—</div>
+          </div>
+        </div>
+        <div class="sheet-row">
+          <div class="sheet-row-header">Comentários positivos</div>
+          <div class="sheet-row-value" id="sheetPos">—</div>
+        </div>
+        <div class="sheet-row">
+          <div class="sheet-row-header">Comentários negativos / O que podia ter feito melhor</div>
+          <div class="sheet-row-value" id="sheetNeg">—</div>
+        </div>
+      </div>
+ 
+      <div class="copy-all-row" id="copyAllRow">
+        <div class="copy-all-label">Linha pronta para colar no Google Planilhas (valores separados por Tab)</div>
+        <div class="copy-all-value" id="tsvPreview"></div>
+        <button class="btn btn-green" onclick="copyTSV()">Copiar linha para planilha</button>
+      </div>
+    </div>
+ 
+    <hr class="section-divider">
+ 
     <div class="action-row">
-      <button class="btn btn-secondary" onclick="toggleReport()">Ver relatório completo</button>
-      <button class="btn-ghost" onclick="copyReport()">Copiar relatório</button>
+      <button class="btn btn-secondary" onclick="toggleReport()">Ver relatório técnico completo</button>
       <button class="btn-ghost" onclick="resetAll()">Corrigir outro aluno</button>
     </div>
     <div class="report-box" id="reportBox"></div>
@@ -205,87 +376,93 @@
 </div>
  
 <script>
-const API_KEY = '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';
- 
 const LAYERS = [
-  { key:'bronze', label:'🥉 Bronze', icon:'🥉', sub:'Ingestão de dados', max:2,  pill:'bronze-pill' },
-  { key:'silver', label:'🥈 Silver', icon:'🥈', sub:'Transformações',    max:5,  pill:'silver-pill' },
-  { key:'gold',   label:'🥇 Gold',   icon:'🥇', sub:'Data Marts',        max:3,  pill:'gold-pill'   }
+  { key:'bronze', label:'🥉 Bronze', icon:'🥉', sub:'Ingestão de dados', max:2, pill:'bronze-pill' },
+  { key:'silver', label:'🥈 Silver', icon:'🥈', sub:'Transformações',    max:5, pill:'silver-pill' },
+  { key:'gold',   label:'🥇 Gold',   icon:'🥇', sub:'Data Marts',        max:3, pill:'gold-pill'   }
 ];
- 
 const LIMITS = [10000, 18000, 10000];
  
 const SYS = `Você é avaliador especialista em Engenharia de Dados com domínio de PySpark, Delta Lake e Databricks. Responda SOMENTE com JSON puro válido, sem markdown, sem texto fora do JSON.`;
  
 const PROMPTS = [
-`Avalie o notebook BRONZE de um projeto Arquitetura Medalhão (dataset Olist).
+`Avalie o notebook BRONZE de um projeto Arquitetura Medalhão (dataset Olist e-commerce brasileiro).
  
 CRITÉRIOS:
-B1 — 9 tabelas criadas com nomes exatos: bronze.tb_customers, bronze.tb_geolocalizacao, bronze.tb_order_items, bronze.tb_order_payments, bronze.tb_order_reviews, bronze.tb_orders, bronze.tb_products, bronze.tb_sellers, bronze.tb_product_category_name_translation
-B2 — Coluna timestamp_ingestion em todas as tabelas, registrando o momento exato da inserção
-B3 — Ingestão da API PTAX do Banco Central criando bronze.tb_cotacao_dolar, datas no formato MM-DD-AAAA
+B1 — 9 tabelas com nomes exatos: bronze.tb_customers, bronze.tb_geolocalizacao, bronze.tb_order_items, bronze.tb_order_payments, bronze.tb_order_reviews, bronze.tb_orders, bronze.tb_products, bronze.tb_sellers, bronze.tb_product_category_name_translation
+B2 — Coluna timestamp_ingestion em todas as tabelas registrando momento exato da inserção
+B3 — Ingestão API PTAX Banco Central criando bronze.tb_cotacao_dolar com datas formato MM-DD-AAAA
  
-Responda com este JSON exato:
-{"nota":<0.0 a 2.0>,"checks":[{"id":"B1","titulo":"9 tabelas bronze criadas","status":"PASSOU|PARCIAL|FALHOU","detalhe":"<observação>"},{"id":"B2","titulo":"Coluna timestamp_ingestion","status":"PASSOU|PARCIAL|FALHOU","detalhe":"<observação>"},{"id":"B3","titulo":"Ingestão API PTAX Banco Central","status":"PASSOU|PARCIAL|FALHOU","detalhe":"<observação>"}],"narrativa":"<3 a 5 frases sobre qualidade geral do notebook bronze>"}`,
+Responda com este JSON (sem markdown):
+{"nota":<0.0 a 2.0>,"checks":[{"id":"B1","titulo":"9 tabelas bronze criadas","status":"PASSOU|PARCIAL|FALHOU","detalhe":"<observação concisa>"},{"id":"B2","titulo":"Coluna timestamp_ingestion","status":"PASSOU|PARCIAL|FALHOU","detalhe":"<observação concisa>"},{"id":"B3","titulo":"Ingestão API PTAX","status":"PASSOU|PARCIAL|FALHOU","detalhe":"<observação concisa>"}],"narrativa":"<3-4 frases sobre qualidade geral do bronze>","positivos":"<pontos fortes do notebook em 1-2 frases diretas>","negativos":"<o que poderia ter feito melhor em 1-2 frases diretas, ou vazio se não houver>"}`,
  
 `Avalie o notebook SILVER de um projeto Arquitetura Medalhão (dataset Olist).
  
 CRITÉRIOS:
-S1 — dim_consumidores: Window Function ROW_NUMBER particionado por customer_id desc timestamp_ingestion, colunas PT (id_consumidor, prefixo_cep, nome_consumidor, cidade, estado), cidade/estado UPPER CASE
-S2 — fat_pedidos: status em PT (delivered→entregue, canceled→cancelado, shipped→enviado, processing→processando, unavailable→indisponível, invoiced→faturado, created→criado, approved→aprovado), colunas derivadas (tempo_entrega_dias, tempo_entrega_estimado_dias, diferenca_entrega_dias, entrega_no_prazo)
+S1 — dim_consumidores: Window Function ROW_NUMBER particionado por customer_id desc timestamp_ingestion; colunas PT: id_consumidor, prefixo_cep, nome_consumidor, cidade, estado; cidade/estado UPPER CASE
+S2 — fat_pedidos: status PT (delivered→entregue, canceled→cancelado, shipped→enviado, processing→processando, unavailable→indisponível, invoiced→faturado, created→criado, approved→aprovado); derivadas: tempo_entrega_dias, tempo_entrega_estimado_dias, diferenca_entrega_dias, entrega_no_prazo
 S3 — fat_itens_pedidos: order_id→id_pedido, order_item_id→id_item, product_id→id_produto, seller_id→id_vendedor, price→preco_BRL, freight_value→preco_frete
 S4 — fat_pagamentos_pedidos: credit_card→Cartão de Crédito, boleto→Boleto, voucher→Voucher, debit_card→Cartão de Débito
-S5 — fat_avaliacoes_pedidos: remove pedidos inválidos e datas futuras, try_to_timestamp, nulos→"Sem comentário"/"Sem título"
-S6 — dim_produtos: Window Function igual S1, mapeamento completo com dimensões em PT
+S5 — fat_avaliacoes_pedidos: remove inválidos e datas futuras, try_to_timestamp, nulos→"Sem comentário"/"Sem título"
+S6 — dim_produtos: Window Function igual S1, mapeamento completo com dimensões PT
 S7 — dim_vendedores: Window Function igual S1, cidade/estado UPPER CASE, seller_id→id_vendedor
-S8 — dim_categoria_produtos_traducao: colunas nome_produto_pt e nome_produto_en
-S9 — dim_cotacao_dolar: calendário contínuo para fins de semana, last(ignorenulls=True) com Window Function
-S10 — fat_pedido_total: join fat_pedidos+pagamentos+cotacao, colunas (id_pedido, id_consumidor, status, valor_total_pago_brl, valor_total_pago_usd, data_pedido), 2 casas decimais
+S8 — dim_categoria_produtos_traducao: nome_produto_pt e nome_produto_en
+S9 — dim_cotacao_dolar: calendário contínuo fins de semana, last(ignorenulls=True) Window Function
+S10 — fat_pedido_total: join fat_pedidos+pagamentos+cotacao; id_pedido, id_consumidor, status, valor_total_pago_brl, valor_total_pago_usd, data_pedido; 2 casas decimais
 S11 — OPTIMIZE + ZORDER nas tabelas fato por id_pedido e data_pedido
  
-Responda com este JSON exato:
-{"nota":<0.0 a 5.0>,"checks":[{"id":"S1","titulo":"dim_consumidores","status":"PASSOU|PARCIAL|FALHOU","detalhe":""},{"id":"S2","titulo":"fat_pedidos","status":"PASSOU|PARCIAL|FALHOU","detalhe":""},{"id":"S3","titulo":"fat_itens_pedidos","status":"PASSOU|PARCIAL|FALHOU","detalhe":""},{"id":"S4","titulo":"fat_pagamentos_pedidos","status":"PASSOU|PARCIAL|FALHOU","detalhe":""},{"id":"S5","titulo":"fat_avaliacoes_pedidos","status":"PASSOU|PARCIAL|FALHOU","detalhe":""},{"id":"S6","titulo":"dim_produtos","status":"PASSOU|PARCIAL|FALHOU","detalhe":""},{"id":"S7","titulo":"dim_vendedores","status":"PASSOU|PARCIAL|FALHOU","detalhe":""},{"id":"S8","titulo":"dim_categoria_traducao","status":"PASSOU|PARCIAL|FALHOU","detalhe":""},{"id":"S9","titulo":"dim_cotacao_dolar","status":"PASSOU|PARCIAL|FALHOU","detalhe":""},{"id":"S10","titulo":"fat_pedido_total","status":"PASSOU|PARCIAL|FALHOU","detalhe":""},{"id":"S11","titulo":"OPTIMIZE + ZORDER","status":"PASSOU|PARCIAL|FALHOU","detalhe":""}],"narrativa":"<3 a 5 frases sobre qualidade geral do notebook silver>"}`,
+Responda com este JSON (sem markdown):
+{"nota":<0.0 a 5.0>,"checks":[{"id":"S1","titulo":"dim_consumidores","status":"PASSOU|PARCIAL|FALHOU","detalhe":""},{"id":"S2","titulo":"fat_pedidos","status":"PASSOU|PARCIAL|FALHOU","detalhe":""},{"id":"S3","titulo":"fat_itens_pedidos","status":"PASSOU|PARCIAL|FALHOU","detalhe":""},{"id":"S4","titulo":"fat_pagamentos_pedidos","status":"PASSOU|PARCIAL|FALHOU","detalhe":""},{"id":"S5","titulo":"fat_avaliacoes_pedidos","status":"PASSOU|PARCIAL|FALHOU","detalhe":""},{"id":"S6","titulo":"dim_produtos","status":"PASSOU|PARCIAL|FALHOU","detalhe":""},{"id":"S7","titulo":"dim_vendedores","status":"PASSOU|PARCIAL|FALHOU","detalhe":""},{"id":"S8","titulo":"dim_categoria_traducao","status":"PASSOU|PARCIAL|FALHOU","detalhe":""},{"id":"S9","titulo":"dim_cotacao_dolar","status":"PASSOU|PARCIAL|FALHOU","detalhe":""},{"id":"S10","titulo":"fat_pedido_total","status":"PASSOU|PARCIAL|FALHOU","detalhe":""},{"id":"S11","titulo":"OPTIMIZE + ZORDER","status":"PASSOU|PARCIAL|FALHOU","detalhe":""}],"narrativa":"<3-4 frases sobre qualidade geral do silver>","positivos":"<pontos fortes em 1-2 frases>","negativos":"<o que poderia ter feito melhor em 1-2 frases, ou vazio se não houver>"}`,
  
 `Avalie o notebook GOLD de um projeto Arquitetura Medalhão (dataset Olist).
  
 CRITÉRIOS:
-G1 — fat_vendas_comercial: granularidade ano+mês+categoria, métricas (ano_venda, mes_venda, categoria_produto, total_pedidos countDistinct, qtd_itens_vendidos, receita_total_brl, receita_total_usd, ticket_medio_brl), 2 casas decimais
+G1 — fat_vendas_comercial: granularidade ano+mês+categoria; métricas: ano_venda, mes_venda, categoria_produto, total_pedidos (countDistinct), qtd_itens_vendidos, receita_total_brl, receita_total_usd, ticket_medio_brl; 2 casas decimais
 G2 — Rankings Top 5 via display(): mais vendidos (nome, categoria, qtd) e menos vendidos
-G3 — fat_avaliacoes_clientes: granularidade categoria+vendedor+estado, métricas (total_avaliacoes, avaliacao_media, total_avaliacoes_positivas>=4, total_avaliacoes_negativas<=2, percentual_satisfacao)
+G3 — fat_avaliacoes_clientes: granularidade categoria+vendedor+estado; total_avaliacoes, avaliacao_media, total_avaliacoes_positivas>=4, total_avaliacoes_negativas<=2, percentual_satisfacao
 G4 — Rankings qualidade via display(): produto mais/menos avaliado, vendedor mais/menos avaliado, desempate por volume desc
  
-Responda com este JSON exato:
-{"nota":<0.0 a 3.0>,"checks":[{"id":"G1","titulo":"fat_vendas_comercial","status":"PASSOU|PARCIAL|FALHOU","detalhe":""},{"id":"G2","titulo":"Rankings Top 5 vendidos","status":"PASSOU|PARCIAL|FALHOU","detalhe":""},{"id":"G3","titulo":"fat_avaliacoes_clientes","status":"PASSOU|PARCIAL|FALHOU","detalhe":""},{"id":"G4","titulo":"Rankings qualidade","status":"PASSOU|PARCIAL|FALHOU","detalhe":""}],"narrativa":"<3 a 5 frases sobre qualidade geral do notebook gold>"}`
+Responda com este JSON (sem markdown):
+{"nota":<0.0 a 3.0>,"checks":[{"id":"G1","titulo":"fat_vendas_comercial","status":"PASSOU|PARCIAL|FALHOU","detalhe":""},{"id":"G2","titulo":"Rankings Top 5 vendidos","status":"PASSOU|PARCIAL|FALHOU","detalhe":""},{"id":"G3","titulo":"fat_avaliacoes_clientes","status":"PASSOU|PARCIAL|FALHOU","detalhe":""},{"id":"G4","titulo":"Rankings qualidade","status":"PASSOU|PARCIAL|FALHOU","detalhe":""}],"narrativa":"<3-4 frases sobre qualidade geral do gold>","positivos":"<pontos fortes em 1-2 frases>","negativos":"<o que poderia ter feito melhor em 1-2 frases, ou vazio se não houver>"}`
 ];
  
-let idx = 0;
-let currentFile = null;
-let studentName = '';
-let results = [];
-let narrativas = [];
+let idx = 0, currentFile = null, studentName = '', apiKey = '';
+let results = [], narrativas = [], allPos = [], allNeg = [];
+ 
+// ── MODAL ─────────────────────────────────────────────────────────────────
+function openGuide()  { document.getElementById('guideModal').classList.add('open'); }
+function closeGuide() { document.getElementById('guideModal').classList.remove('open'); }
+document.getElementById('guideModal').addEventListener('click', e => { if(e.target===e.currentTarget) closeGuide(); });
+ 
+// ── SETUP ─────────────────────────────────────────────────────────────────
+function checkReady() {
+  const key  = document.getElementById('apiKeyInput').value.trim();
+  const name = document.getElementById('studentName').value.trim();
+  document.getElementById('startBtn').disabled = !(key.startsWith('gsk_') && name.length > 0);
+}
  
 function startFlow() {
-  studentName = document.getElementById('studentName').value.trim() || 'Aluno';
+  apiKey      = document.getElementById('apiKeyInput').value.trim();
+  studentName = document.getElementById('studentName').value.trim();
   document.getElementById('nameCard').style.display = 'none';
-  document.getElementById('stepper').style.display = 'flex';
+  document.getElementById('stepper').style.display  = 'flex';
   showUpload(0);
 }
  
 function showUpload(i) {
-  idx = i;
-  currentFile = null;
+  idx = i; currentFile = null;
   const L = LAYERS[i];
-  document.getElementById('uploadCard').style.display = 'block';
+  document.getElementById('uploadCard').style.display   = 'block';
   document.getElementById('thinkingCard').style.display = 'none';
-  document.getElementById('errorBox').style.display = 'none';
-  document.getElementById('uploadTitle').textContent = `Notebook ${L.label}  —  ${L.sub}`;
-  document.getElementById('uzIcon').textContent = L.icon;
-  document.getElementById('uzTitle').textContent = `Arraste ou clique para selecionar o notebook ${L.key}`;
-  document.getElementById('uzSub').textContent = L.sub + ' · .ipynb';
-  document.getElementById('uzFile').textContent = '';
+  document.getElementById('errorBox').style.display     = 'none';
+  document.getElementById('uploadTitle').textContent    = `Notebook ${L.label}  —  ${L.sub}`;
+  document.getElementById('uzIcon').textContent         = L.icon;
+  document.getElementById('uzTitle').textContent        = `Arraste ou clique para selecionar o notebook ${L.key}`;
+  document.getElementById('uzSub').textContent          = L.sub + ' · .ipynb';
+  document.getElementById('uzFile').textContent         = '';
   document.getElementById('uploadZone').classList.remove('has-file');
-  document.getElementById('fileInput').value = '';
-  document.getElementById('analyzeBtn').disabled = true;
+  document.getElementById('fileInput').value            = '';
+  document.getElementById('analyzeBtn').disabled        = true;
   updateStepper(i);
 }
  
@@ -294,21 +471,21 @@ function updateStepper(active) {
     const el = document.getElementById('step-' + i);
     el.className = 'step';
     const c = el.querySelector('.step-circle');
-    if (i < active)      { el.classList.add('done');   c.textContent = '✓'; }
-    else if (i === active){ el.classList.add('active'); c.textContent = i + 1; }
-    else                  { c.textContent = i + 1; }
+    if      (i < active)  { el.classList.add('done');   c.textContent = '✓'; }
+    else if (i === active) { el.classList.add('active'); c.textContent = i+1; }
+    else                   { c.textContent = i+1; }
   }
 }
  
 function onFileSelected(input) {
-  const f = input.files[0];
-  if (!f) return;
+  const f = input.files[0]; if (!f) return;
   currentFile = f;
   document.getElementById('uzFile').textContent = f.name;
   document.getElementById('uploadZone').classList.add('has-file');
   document.getElementById('analyzeBtn').disabled = false;
 }
  
+// ── NOTEBOOK READER ───────────────────────────────────────────────────────
 async function readNotebook(file, limit) {
   return new Promise((resolve, reject) => {
     const r = new FileReader();
@@ -316,7 +493,7 @@ async function readNotebook(file, limit) {
       try {
         const nb = JSON.parse(e.target.result);
         let code = '', n = 0;
-        (nb.cells || []).forEach(cell => {
+        (nb.cells||[]).forEach(cell => {
           if (cell.cell_type !== 'code') return;
           const src = (Array.isArray(cell.source) ? cell.source.join('') : cell.source).trim();
           if (!src) return;
@@ -336,20 +513,21 @@ async function readNotebook(file, limit) {
   });
 }
  
+// ── ANALYSIS ──────────────────────────────────────────────────────────────
 async function runAnalysis() {
-  document.getElementById('uploadCard').style.display = 'none';
+  document.getElementById('uploadCard').style.display   = 'none';
   document.getElementById('thinkingCard').style.display = 'block';
-  document.getElementById('thinkingText').textContent = `Analisando notebook ${LAYERS[idx].label}...`;
-  document.getElementById('errorBox').style.display = 'none';
+  document.getElementById('thinkingText').textContent   = `Analisando notebook ${LAYERS[idx].label}...`;
+  document.getElementById('errorBox').style.display     = 'none';
  
   try {
     const code = await readNotebook(currentFile, LIMITS[idx]);
-    const res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+    const res  = await fetch('https://api.groq.com/openai/v1/chat/completions', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${API_KEY}` },
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${apiKey}` },
       body: JSON.stringify({
         model: 'llama-3.3-70b-versatile',
-        max_tokens: 1800,
+        max_tokens: 2000,
         temperature: 0.1,
         messages: [
           { role: 'system', content: SYS },
@@ -358,19 +536,18 @@ async function runAnalysis() {
       })
     });
  
-    if (!res.ok) {
-      const e = await res.json();
-      throw new Error(e.error?.message || 'Erro na API Groq');
-    }
+    if (!res.ok) { const e = await res.json(); throw new Error(e.error?.message || 'Erro na API Groq'); }
  
-    const data = await res.json();
-    const raw  = data.choices?.[0]?.message?.content || '';
+    const data   = await res.json();
+    const raw    = data.choices?.[0]?.message?.content || '';
     let result;
     try { result = JSON.parse(raw.replace(/```json|```/g,'').trim()); }
-    catch(e) { throw new Error('Formato de resposta inválido. Tente novamente.'); }
+    catch(e) { throw new Error('Formato inesperado. Tente novamente.'); }
  
     results.push(result);
     narrativas.push(`[${LAYERS[idx].key.toUpperCase()}] ${result.narrativa}`);
+    if (result.positivos) allPos.push(result.positivos);
+    if (result.negativos) allNeg.push(result.negativos);
  
     document.getElementById('thinkingCard').style.display = 'none';
     renderLayer(idx, result);
@@ -384,15 +561,16 @@ async function runAnalysis() {
  
   } catch(err) {
     document.getElementById('thinkingCard').style.display = 'none';
-    document.getElementById('uploadCard').style.display = 'block';
-    document.getElementById('errorBox').style.display = 'block';
-    document.getElementById('errorBox').textContent = 'Erro: ' + err.message;
-    document.getElementById('analyzeBtn').disabled = false;
+    document.getElementById('uploadCard').style.display   = 'block';
+    document.getElementById('errorBox').style.display     = 'block';
+    document.getElementById('errorBox').textContent       = 'Erro: ' + err.message;
+    document.getElementById('analyzeBtn').disabled        = false;
   }
 }
  
+// ── RENDER LAYER ──────────────────────────────────────────────────────────
 function renderLayer(i, r) {
-  const L   = LAYERS[i];
+  const L    = LAYERS[i];
   const nota = Number(r.nota).toFixed(1);
   const html = r.checks.map(c => {
     const cls  = c.status==='PASSOU' ? 'check-pass' : c.status==='PARCIAL' ? 'check-partial' : 'check-fail';
@@ -417,31 +595,51 @@ function renderLayer(i, r) {
   document.getElementById('resultsArea').appendChild(div);
 }
  
+// ── RENDER FINAL ──────────────────────────────────────────────────────────
 function renderFinal() {
   const nb = Number(results[0]?.nota||0);
   const ns = Number(results[1]?.nota||0);
   const ng = Number(results[2]?.nota||0);
   const total = nb + ns + ng;
-  const pct = (total/10)*100;
+  const pct   = (total/10)*100;
  
   document.getElementById('finalCard').style.display = 'block';
-  document.getElementById('finalName').textContent = studentName;
-  document.getElementById('scoreTotal').textContent = total.toFixed(1);
-  document.getElementById('scBronze').textContent = nb.toFixed(1);
-  document.getElementById('scSilver').textContent = ns.toFixed(1);
-  document.getElementById('scGold').textContent   = ng.toFixed(1);
+  document.getElementById('finalName').textContent   = studentName;
+  document.getElementById('scoreTotal').textContent  = total.toFixed(1);
+  document.getElementById('scBronze').textContent    = nb.toFixed(1);
+  document.getElementById('scSilver').textContent    = ns.toFixed(1);
+  document.getElementById('scGold').textContent      = ng.toFixed(1);
  
   const bar = document.getElementById('scoreBar');
-  bar.style.width = pct + '%';
+  bar.style.width      = pct + '%';
   bar.style.background = pct>=70 ? '#16a34a' : pct>=50 ? '#d97706' : '#dc2626';
  
+  // Planilha
+  const posText = allPos.filter(Boolean).join(' | ') || 'Sem comentários positivos registrados.';
+  const negText = allNeg.filter(n => n && n.trim()).join(' | ') || 'Sem pontos de melhoria registrados.';
+ 
+  document.getElementById('sheetName').textContent   = studentName;
+  document.getElementById('sheetBronze').textContent = nb.toFixed(1);
+  document.getElementById('sheetSilver').textContent = ns.toFixed(1);
+  document.getElementById('sheetGold').textContent   = ng.toFixed(1);
+  document.getElementById('sheetTotal').textContent  = total.toFixed(1);
+  document.getElementById('sheetPos').textContent    = posText;
+  document.getElementById('sheetNeg').textContent    = negText;
+ 
+  const tsv = [studentName, nb.toFixed(1), ns.toFixed(1), ng.toFixed(1), total.toFixed(1), posText, negText].join('\t');
+  document.getElementById('tsvPreview').textContent = tsv;
+ 
+  // Relatório técnico
   const report = [
     `ALUNO: ${studentName}`,
     `NOTA TOTAL: ${total.toFixed(1)} / 10`,
     `Bronze: ${nb.toFixed(1)}/2  |  Silver: ${ns.toFixed(1)}/5  |  Gold: ${ng.toFixed(1)}/3`,
-    '', '='.repeat(50), 'ANÁLISE POR CAMADA', '='.repeat(50), '',
+    '', '─'.repeat(50), 'COMENTÁRIOS GERAIS', '─'.repeat(50),
+    `Positivos: ${posText}`,
+    `Melhorias: ${negText}`,
+    '', '─'.repeat(50), 'ANÁLISE POR CAMADA', '─'.repeat(50), '',
     ...narrativas, '',
-    '='.repeat(50), 'CRITÉRIOS DETALHADOS', '='.repeat(50), '',
+    '─'.repeat(50), 'CRITÉRIOS DETALHADOS', '─'.repeat(50), '',
     ...LAYERS.map((L,i) => {
       const r = results[i]; if(!r) return '';
       return `--- ${L.key.toUpperCase()} ---\n` +
@@ -453,29 +651,32 @@ function renderFinal() {
   document.getElementById('finalCard').scrollIntoView({ behavior:'smooth' });
 }
  
+// ── ACTIONS ───────────────────────────────────────────────────────────────
+function copyTSV() {
+  const tsv = document.getElementById('tsvPreview').textContent;
+  navigator.clipboard.writeText(tsv).then(() => {
+    const btn = document.querySelector('.btn-green');
+    const orig = btn.textContent;
+    btn.textContent = '✓ Copiado!';
+    setTimeout(() => btn.textContent = orig, 2000);
+  });
+}
+ 
 function toggleReport() {
   document.getElementById('reportBox').classList.toggle('open');
 }
  
-function copyReport() {
-  navigator.clipboard.writeText(document.getElementById('reportBox').textContent).then(() => {
-    event.target.textContent = 'Copiado!';
-    setTimeout(() => event.target.textContent = 'Copiar relatório', 2000);
-  });
-}
- 
 function resetAll() {
-  idx=0; currentFile=null; results=[]; narrativas=[];
-  studentName='';
-  document.getElementById('nameCard').style.display='block';
-  document.getElementById('stepper').style.display='none';
-  document.getElementById('uploadCard').style.display='none';
-  document.getElementById('thinkingCard').style.display='none';
-  document.getElementById('finalCard').style.display='none';
-  document.getElementById('errorBox').style.display='none';
-  document.getElementById('resultsArea').innerHTML='';
-  document.getElementById('studentName').value='';
+  idx=0; currentFile=null; results=[]; narrativas=[]; allPos=[]; allNeg=[];
+  document.getElementById('nameCard').style.display    = 'block';
+  document.getElementById('stepper').style.display     = 'none';
+  document.getElementById('uploadCard').style.display  = 'none';
+  document.getElementById('thinkingCard').style.display= 'none';
+  document.getElementById('finalCard').style.display   = 'none';
+  document.getElementById('errorBox').style.display    = 'none';
+  document.getElementById('resultsArea').innerHTML     = '';
   document.getElementById('reportBox').classList.remove('open');
+  document.getElementById('studentName').value         = '';
 }
 </script>
 </body>
