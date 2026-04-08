@@ -650,7 +650,7 @@ function renderFinal() {
   document.getElementById('sheetPos').textContent    = posText;
   document.getElementById('sheetNeg').textContent    = negText;
  
-  const tsv = [studentName, nb.toFixed(1), ns.toFixed(1), ng.toFixed(1), total.toFixed(1), posText, negText].join('\t');
+  const tsv = [nb.toFixed(1), ns.toFixed(1), ng.toFixed(1), total.toFixed(1), posText, negText].join('\t');
   document.getElementById('tsvPreview').textContent = tsv;
  
   // Relatório técnico
