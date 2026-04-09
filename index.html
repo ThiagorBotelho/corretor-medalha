@@ -280,10 +280,10 @@
   <div class="card" id="uploadCard" style="display:none;">
     <div class="card-title" id="uploadTitle"></div>
     <div class="upload-zone" id="uploadZone">
-      <input type="file" accept=".ipynb" id="fileInput" onchange="onFileSelected(this)" />
+      <input type="file" accept=".ipynb,.py" id="fileInput" onchange="onFileSelected(this)" />
       <div class="upload-zone-icon" id="uzIcon">📂</div>
       <div class="upload-zone-title" id="uzTitle">Clique ou arraste o arquivo aqui</div>
-      <div class="upload-zone-sub" id="uzSub">.ipynb</div>
+      <div class="upload-zone-sub" id="uzSub">.ipynb ou .py</div>
       <div class="upload-zone-file" id="uzFile"></div>
     </div>
     <div class="action-row">
@@ -480,7 +480,7 @@ function showUpload(i) {
   document.getElementById('uploadTitle').textContent    = `Notebook ${L.label}  —  ${L.sub}`;
   document.getElementById('uzIcon').textContent         = L.icon;
   document.getElementById('uzTitle').textContent        = `Arraste ou clique para selecionar o notebook ${L.key}`;
-  document.getElementById('uzSub').textContent          = L.sub + ' · .ipynb';
+  document.getElementById('uzSub').textContent          = L.sub + ' · .ipynb ou .py';
   document.getElementById('uzFile').textContent         = '';
   document.getElementById('uploadZone').classList.remove('has-file');
   document.getElementById('fileInput').value            = '';
@@ -513,22 +513,48 @@ async function readNotebook(file, limit) {
     const r = new FileReader();
     r.onload = e => {
       try {
-        const nb = JSON.parse(e.target.result);
+        const raw = e.target.result;
         let code = '', n = 0;
-        (nb.cells||[]).forEach(cell => {
-          if (cell.cell_type !== 'code') return;
-          const src = (Array.isArray(cell.source) ? cell.source.join('') : cell.source).trim();
-          if (!src) return;
-          // useful = linhas que não são só mágicos/pip (para decidir se a célula vale incluir)
-          // comentários (#) são MANTIDOS — a IA precisa deles para avaliar documentação
-          const useful = src.split('\n').filter(l => {
-            const t = l.trim();
-            return t && !t.startsWith('%') && !t.startsWith('!');
+ 
+        // Detecta formato pelo nome ou tentando parsear como JSON
+        const isPy = file.name.endsWith('.py');
+ 
+        if (isPy) {
+          // Arquivo .py — lê como texto puro, agrupa em blocos por célula Databricks (# COMMAND ----------)
+          const blocks = raw.split(/# COMMAND -{5,}/).map(b => b.trim()).filter(Boolean);
+          if (blocks.length > 1) {
+            // Databricks .py com separadores de célula
+            blocks.forEach(block => {
+              const useful = block.split('\n').filter(l => {
+                const t = l.trim();
+                return t && !t.startsWith('%') && !t.startsWith('!');
+              });
+              if (!useful.length) return;
+              if (useful.length <= 2 && useful.every(l => /^(display|print|show)\s*\(/.test(l.trim()))) return;
+              code += `# --- Célula ${++n} ---\n${block}\n\n`;
+            });
+          } else {
+            // .py simples sem separadores — envia o arquivo inteiro
+            code = raw;
+          }
+        } else {
+          // Arquivo .ipynb — parseia como JSON
+          const nb = JSON.parse(raw);
+          (nb.cells||[]).forEach(cell => {
+            if (cell.cell_type !== 'code') return;
+            const src = (Array.isArray(cell.source) ? cell.source.join('') : cell.source).trim();
+            if (!src) return;
+            // comentários (#) são MANTIDOS — a IA precisa deles para avaliar documentação
+            const useful = src.split('\n').filter(l => {
+              const t = l.trim();
+              return t && !t.startsWith('%') && !t.startsWith('!');
+            });
+            if (!useful.length) return;
+            if (useful.length <= 2 && useful.every(l => /^(display|print|show)\s*\(/.test(l.trim()))) return;
+            code += `# --- Célula ${++n} ---\n${src}\n\n`;
           });
-          if (!useful.length) return;
-          if (useful.length <= 2 && useful.every(l => /^(display|print|show)\s*\(/.test(l.trim()))) return;
-          code += `# --- Célula ${++n} ---\n${src}\n\n`;
-        });
+        }
+ 
         resolve(code.substring(0, limit));
       } catch(err) { reject(err); }
     };
