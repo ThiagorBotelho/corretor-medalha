@@ -388,7 +388,7 @@ const LAYERS = [
   { key:'silver', label:'🥈 Silver', icon:'🥈', sub:'Transformações',    max:5, pill:'silver-pill' },
   { key:'gold',   label:'🥇 Gold',   icon:'🥇', sub:'Data Marts',        max:3, pill:'gold-pill'   }
 ];
-const LIMITS = [10000, 18000, 10000];
+const LIMITS = [16000, 32000, 16000];
  
 const SYS = `Você é avaliador especialista em Engenharia de Dados com domínio de PySpark, Delta Lake e Databricks. Responda SOMENTE com JSON puro válido, sem markdown, sem texto fora do JSON.`;
  
@@ -555,7 +555,8 @@ async function readNotebook(file, limit) {
           });
         }
  
-        resolve(code.substring(0, limit));
+        const trimmed = code.substring(0, limit);
+        resolve({ code: trimmed, total: code.length, sent: trimmed.length });
       } catch(err) { reject(err); }
     };
     r.onerror = reject;
@@ -571,7 +572,10 @@ async function runAnalysis() {
   document.getElementById('errorBox').style.display     = 'none';
  
   try {
-    const code = await readNotebook(currentFile, LIMITS[idx]);
+    const nb_read = await readNotebook(currentFile, LIMITS[idx]);
+    const code = nb_read.code;
+    const charsSent = nb_read.sent;
+    const charsTotal = nb_read.total;
     const res  = await fetch('https://api.groq.com/openai/v1/chat/completions', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${apiKey}` },
@@ -594,6 +598,10 @@ async function runAnalysis() {
     try { result = JSON.parse(raw.replace(/```json|```/g,'').trim()); }
     catch(e) { throw new Error('Formato inesperado. Tente novamente.'); }
  
+    result._charsSent  = charsSent;
+    result._charsTotal = charsTotal;
+    result._layerIdx   = idx;
+    result._lastFile   = currentFile;
     results.push(result);
     narrativas.push(`[${LAYERS[idx].key.toUpperCase()}] ${result.narrativa}`);
     if (result.positivos) allPos.push(result.positivos);
@@ -619,9 +627,17 @@ async function runAnalysis() {
 }
  
 // ── RENDER LAYER ──────────────────────────────────────────────────────────
-function renderLayer(i, r) {
+function renderLayer(i, r, isReplace) {
   const L    = LAYERS[i];
   const nota = Number(r.nota).toFixed(1);
+ 
+  // chars indicator
+  const pctSent = r._charsTotal > 0 ? Math.round((r._charsSent / r._charsTotal) * 100) : 100;
+  const wasCut  = r._charsSent < r._charsTotal;
+  const charInfo = wasCut
+    ? `<span style="font-size:11px;color:#b45309;background:#fef3c7;border:1px solid #fde68a;border-radius:6px;padding:2px 8px;margin-left:8px;">⚠ ${pctSent}% do código analisado (${r._charsSent.toLocaleString()} / ${r._charsTotal.toLocaleString()} chars)</span>`
+    : `<span style="font-size:11px;color:#166534;background:#dcfce7;border:1px solid #bbf7d0;border-radius:6px;padding:2px 8px;margin-left:8px;">✓ 100% do código analisado</span>`;
+ 
   const html = r.checks.map(c => {
     const cls  = c.status==='PASSOU' ? 'check-pass' : c.status==='PARCIAL' ? 'check-partial' : 'check-fail';
     const icon = c.status==='PASSOU' ? '✓' : c.status==='PARCIAL' ? '~' : '✗';
@@ -633,16 +649,30 @@ function renderLayer(i, r) {
  
   const div = document.createElement('div');
   div.className = `layer-result ${L.key}`;
+  div.id = `layer-block-${i}`;
   div.innerHTML = `
     <div class="layer-result-header" onclick="this.nextElementSibling.classList.toggle('open')">
-      <div class="layer-result-title">${L.icon} Camada ${L.key.charAt(0).toUpperCase()+L.key.slice(1)}</div>
+      <div class="layer-result-title" style="display:flex;align-items:center;flex-wrap:wrap;gap:4px;">
+        ${L.icon} Camada ${L.key.charAt(0).toUpperCase()+L.key.slice(1)}
+        ${charInfo}
+      </div>
       <span class="score-pill ${L.pill}">${nota} / ${L.max} pts</span>
     </div>
     <div class="layer-result-body open">
       ${html}
       <div class="narrative">${r.narrativa}</div>
+      <div style="margin-top:12px;padding-top:10px;border-top:1px solid #f0f0ee;display:flex;gap:8px;flex-wrap:wrap;">
+        <button class="btn-ghost" style="font-size:12px;padding:5px 12px;" onclick="reanalyzeLayer(${i})">Repetir análise desta camada</button>
+        <button class="btn-ghost" style="font-size:12px;padding:5px 12px;" onclick="reuploadLayer(${i})">Substituir notebook e reanalisar</button>
+      </div>
     </div>`;
-  document.getElementById('resultsArea').appendChild(div);
+ 
+  if (isReplace) {
+    const old = document.getElementById(`layer-block-${i}`);
+    if (old) old.replaceWith(div);
+  } else {
+    document.getElementById('resultsArea').appendChild(div);
+  }
 }
  
 // ── RENDER FINAL ──────────────────────────────────────────────────────────
@@ -714,6 +744,81 @@ function copyTSV() {
  
 function toggleReport() {
   document.getElementById('reportBox').classList.toggle('open');
+}
+ 
+// ── REANALYZE ─────────────────────────────────────────────────────────────
+async function reanalyzeLayer(i) {
+  const r = results[i];
+  if (!r || !r._lastFile) { alert('Arquivo não encontrado. Use "Substituir notebook" para reanalisar.'); return; }
+  await rerunLayer(i, r._lastFile);
+}
+ 
+async function reuploadLayer(i) {
+  // Create a temporary file input, trigger it, then rerun
+  const input = document.createElement('input');
+  input.type = 'file';
+  input.accept = '.ipynb,.py';
+  input.onchange = async () => {
+    if (!input.files[0]) return;
+    await rerunLayer(i, input.files[0]);
+  };
+  input.click();
+}
+ 
+async function rerunLayer(i, file) {
+  // Hide final card if visible, show thinking
+  document.getElementById('finalCard').style.display   = 'none';
+  document.getElementById('errorBox').style.display    = 'none';
+  document.getElementById('thinkingCard').style.display = 'block';
+  document.getElementById('thinkingText').textContent  = `Reanalisando notebook ${LAYERS[i].label}...`;
+ 
+  try {
+    const nb_read = await readNotebook(file, LIMITS[i]);
+    const code = nb_read.code;
+    const res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${apiKey}` },
+      body: JSON.stringify({
+        model: 'llama-3.3-70b-versatile',
+        max_tokens: 2000,
+        temperature: 0.1,
+        messages: [
+          { role: 'system', content: SYS },
+          { role: 'user',   content: PROMPTS[i] + '\n\nCÓDIGO DO NOTEBOOK:\n' + code }
+        ]
+      })
+    });
+    if (!res.ok) { const e = await res.json(); throw new Error(e.error?.message || 'Erro na API Groq'); }
+    const data = await res.json();
+    const raw  = data.choices?.[0]?.message?.content || '';
+    let result;
+    try { result = JSON.parse(raw.replace(/```json|```/g,'').trim()); }
+    catch(e) { throw new Error('Formato inesperado. Tente novamente.'); }
+ 
+    result._charsSent  = nb_read.sent;
+    result._charsTotal = nb_read.total;
+    result._layerIdx   = i;
+    result._lastFile   = file;
+    results[i] = result;
+ 
+    // Update narrativa and comments
+    narrativas[i] = `[${LAYERS[i].key.toUpperCase()}] ${result.narrativa}`;
+    allPos[i] = result.positivos || '';
+    allNeg[i] = result.negativos || '';
+ 
+    document.getElementById('thinkingCard').style.display = 'none';
+    renderLayer(i, result, true); // replace existing block
+ 
+    // Recalculate final if all layers done
+    if (results.length === 3 && results.every(Boolean)) {
+      renderFinal();
+    }
+ 
+  } catch(err) {
+    document.getElementById('thinkingCard').style.display = 'none';
+    document.getElementById('errorBox').style.display = 'block';
+    document.getElementById('errorBox').textContent = 'Erro: ' + err.message;
+  }
 }
  
 function resetAll() {
